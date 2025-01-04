@@ -30,15 +30,20 @@
 
   <button @click="isCollapsed=!isCollapsed">oei</button>
 
- 
-
+  <StarIcon class="w-64 h-64 text-yellow-500" />
+  
 
 
 </div>
 </template>
 
 <script>
+import { StarIcon } from '@heroicons/vue/solid';
+
 export default {
+  components:{
+    StarIcon
+  },
   data(){
     return{
       isCollapsed:true
