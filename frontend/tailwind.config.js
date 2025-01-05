@@ -10,9 +10,11 @@ module.exports = {
         primary: '#1E40AF',    // Example primary color
         secondary: '#F59E0B',  // Example secondary color
         'secondary-dark': '#D97706', // Dark variant for hover
-        // Add more colors based on your palette
+        'neonGreen': '#7FFF00'
       },
     },
+
+    
   },
   plugins: [],
 }
