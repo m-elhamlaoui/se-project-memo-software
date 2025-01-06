@@ -1,6 +1,9 @@
 <template>
-<div class="flex">
 
+ <!--
+
+
+ <div class="flex">
 <div        :class="[isCollapsed ? 'w-16' : 'w-64',' transition-all top-0 left-0 h-screen m-0 flex flex-col   bg-gray-900 text-white shadow-lg']"
                     >
                     
@@ -29,20 +32,40 @@
 
 
   <button @click="isCollapsed=!isCollapsed">oei</button>
+  
 
   <StarIcon class="w-64 h-64 text-yellow-500" />
-  
+
 
 
 </div>
+
+
+
+
+
+ --> 
+
+<Home/>
+<AboutUs/>
+<Wallet/>
+<VotingSystem/>
+
 </template>
 
 <script>
 import { StarIcon } from '@heroicons/vue/solid';
-
+import Home from './views/Home.vue' ; 
+import AboutUs from './views/AboutUs.vue';
+import Wallet from './views/Wallet.vue';
+import VotingSystem from './views/VotingSystem.vue';
 export default {
   components:{
-    StarIcon
+    StarIcon , 
+    Home , 
+    AboutUs ,
+    Wallet ,
+    VotingSystem
   },
   data(){
     return{
