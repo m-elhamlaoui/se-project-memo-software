@@ -2,24 +2,40 @@ package com.example.taskblock.model.taskblock;
 
 import com.example.taskblock.model.task.Task;
 import com.example.taskblock.model.user.User;
+import com.example.taskblock.model.wallet.Wallet;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.*;
 
+@Getter
+@Setter
 @Entity
+@Table(name = "task_blocks")
 public class TaskBlock {
-    @jakarta.persistence.Id
+
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
 
     @ManyToOne
     @JoinColumn(name = "creator_id", nullable = false)
     private User creator;
 
-    @OneToMany(mappedBy = "taskBlock", cascade = CascadeType.ALL)
-    private List<Task> tasks;
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    @OneToMany(mappedBy = "taskBlock", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Task> tasks = new ArrayList<>(); // Initialize as empty list
+
+    @OneToMany(mappedBy = "taskBlock", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Wallet> wallets = new ArrayList<>(); // Initialize as empty list
 
     // Constructors
     public TaskBlock() {}
@@ -29,7 +45,33 @@ public class TaskBlock {
         this.creator = creator;
     }
 
-    // Getters and Setters
+    // Methods
+    public void addTask(Task task) {
+        task.setTaskBlock(this);
+        this.tasks.add(task);
+    }
+
+    public void removeTask(Task task) {
+        this.tasks.remove(task);
+        task.setTaskBlock(null);
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public User getCreator() {
+        return creator;
+    }
+
+    public void setCreator(User creator) {
+        this.creator = creator;
+    }
+
     public Long getId() {
         return id;
     }
@@ -46,14 +88,6 @@ public class TaskBlock {
         this.name = name;
     }
 
-    public User getCreator() {
-        return creator;
-    }
-
-    public void setCreator(User creator) {
-        this.creator = creator;
-    }
-
     public List<Task> getTasks() {
         return tasks;
     }
@@ -62,4 +96,21 @@ public class TaskBlock {
         this.tasks = tasks;
     }
 
+    public List<Wallet> getWallets() {
+        return wallets;
+    }
+
+    public void setWallets(List<Wallet> wallets) {
+        this.wallets = wallets;
+    }
+
+    public void addWallet(Wallet wallet) {
+        wallet.setTaskBlock(this);
+        this.wallets.add(wallet);
+    }
+
+    public void removeWallet(Wallet wallet) {
+        this.wallets.remove(wallet);
+        wallet.setTaskBlock(null);
+    }
 }
