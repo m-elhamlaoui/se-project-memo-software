@@ -21,7 +21,7 @@
     </div>
 
     <div class="flex-1 flex justify-center items-center">
-      <img class="w-30 h-30 rounded-full" src="../assets/file.png" alt="User" />
+      <img class="w-30 h-30 rounded-full" src="../../assets/file.png" alt="User" />
     </div>
   </div>
 </template>
