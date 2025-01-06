@@ -35,7 +35,7 @@ entity Votes {
     * id : int <<PK>>
     * task_id : int <<FK>>
     * voter_id : int <<FK>>
-    * value : String
+    * value : Bool
 }
 
 Users ||--o{ TaskBlocks : "creates"

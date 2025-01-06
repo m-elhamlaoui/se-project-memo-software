@@ -33,7 +33,7 @@ public abstract class User implements UserDetails {
 
     private String profileImage;
 
-    
+
 
     @Column(updatable = false)
     private LocalDateTime createdAt;
@@ -89,7 +89,7 @@ public abstract class User implements UserDetails {
     public void setProfileImage(String profileImage) {
         this.profileImage = profileImage;
     }
-   
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
