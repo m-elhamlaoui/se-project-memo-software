@@ -3,6 +3,7 @@ import store from '../store';
 import Login from "@/views/Login.vue"
 import SignUp from "@/views/SignUp.vue"
 import Home from "@/views/Home.vue"
+import Dashboard from "@/views/Dashboard.vue"
 
 
 
@@ -11,6 +12,8 @@ const routes = [
   { path: '/login', name: 'Login', component: Login },
   { path: '/signup', name: 'Signup', component: SignUp },
   { path: '/', name: 'Home', component: Home },
+  { path: '/dashboard', name: 'Dashboard', component: Dashboard },
+
 
   
   // Redirect unknown routes to Home
