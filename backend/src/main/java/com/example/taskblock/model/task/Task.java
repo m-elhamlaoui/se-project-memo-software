@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +33,14 @@ public class Task {
     @ManyToOne
     @JoinColumn(name = "taskblock_id", nullable = false)
     private TaskBlock taskBlock;
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt = LocalDateTime.now(); // Automatically set creation time
+
 
     public String getDescription() {
         return description;
@@ -84,9 +93,13 @@ public class Task {
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Vote> votes = new ArrayList<>();
 
-    // Constructors
     public Task() {}
-
+    public Task(String title, String description, TaskBlock taskBlock) {
+        this.title = title;
+        this.description = description;
+        this.status = TaskStatus.PENDING;
+        this.taskBlock = taskBlock;
+    }
     public Task(String title, String description, TaskStatus status, TaskBlock taskBlock) {
         this.title = title;
         this.description = description;
@@ -104,4 +117,14 @@ public class Task {
         this.votes.remove(vote);
         vote.setTask(null);
     }
+    public void setCreatedAt(LocalDateTime localDateTime) {
+        this.createdAt=localDateTime;
+    }
+
+    public void checkAndRejectIfExpired() {
+        if (status == TaskStatus.PENDING && taskBlock.getTimeRejectionStrategy().shouldReject(createdAt)) {
+            this.status = TaskStatus.REJECTED;
+        }
+    }
+
 }

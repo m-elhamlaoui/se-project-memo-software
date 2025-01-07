@@ -5,31 +5,32 @@ import com.example.taskblock.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class TaskService {
 
-    @Autowired
-    private TaskRepository taskRepository;
+    private final TaskRepository taskRepository;
 
     @Autowired
-    private BlockchainService blockchainService;
+    public TaskService(TaskRepository taskRepository) {
+        this.taskRepository = taskRepository;
+    }
 
     public Task createTask(Task task) {
-        // Save the task in the database
-        Task savedTask = taskRepository.save(task);
+        return taskRepository.save(task);
+    }
 
-        // Record the task on the blockchain
-        try {
-            String txHash = blockchainService.recordTaskOnBlockchain(
-                    String.valueOf(savedTask.getId()),
-                    savedTask.getTitle(),
-                    savedTask.getDescription()
-            );
-            System.out.println("Blockchain transaction hash: " + txHash);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public Optional<Task> getTaskById(Long id) {
+        return taskRepository.findById(id);
+    }
 
-        return savedTask;
+    public List<Task> getTasksByTaskBlockId(Long taskBlockId) {
+        return taskRepository.findByTaskBlockId(taskBlockId);
+    }
+
+    public void deleteTask(Long id) {
+        taskRepository.deleteById(id);
     }
 }

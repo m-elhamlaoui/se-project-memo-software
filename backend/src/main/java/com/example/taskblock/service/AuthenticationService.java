@@ -1,23 +1,24 @@
 package com.example.taskblock.service;
 
+import com.example.taskblock.model.user.Member;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.taskblock.dto.LoginUserDto;
-import com.example.taskblock.repository.UserRepository;
+import com.example.taskblock.repository.MemberRepository;
 
 @Service
 public class AuthenticationService {
-    private final UserRepository userRepository;
+    private final MemberRepository userRepository;
     
     private final PasswordEncoder passwordEncoder;
     
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationService(
-        UserRepository userRepository,
+        MemberRepository userRepository,
         AuthenticationManager authenticationManager,
         PasswordEncoder passwordEncoder
     ) {
