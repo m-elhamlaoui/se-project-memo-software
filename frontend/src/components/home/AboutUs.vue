@@ -13,7 +13,7 @@
 
     <div class="flex items-center justify-evenly w-full">
       <!-- Image Section -->
-      <img src="../assets/image.png" class="h-64 w-64">
+      <img src="../../assets/image.png" class="h-64 w-64">
 
       <!-- Description Section -->
       <p class="text-lg text-gray-800 text-right max-w-2xl px-4 par">

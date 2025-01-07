@@ -46,27 +46,13 @@
 
  --> 
 
-<Home/>
-<AboutUs/>
-<Wallet/>
-<VotingSystem/>
-
+ <router-view />
 </template>
 
 <script>
 import { StarIcon } from '@heroicons/vue/solid';
-import Home from './views/Home.vue' ; 
-import AboutUs from './views/AboutUs.vue';
-import Wallet from './views/Wallet.vue';
-import VotingSystem from './views/VotingSystem.vue';
+
 export default {
-  components:{
-    StarIcon , 
-    Home , 
-    AboutUs ,
-    Wallet ,
-    VotingSystem
-  },
   data(){
     return{
       isCollapsed:true
