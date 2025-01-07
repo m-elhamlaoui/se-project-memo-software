@@ -1,6 +1,7 @@
 package com.example.taskblock.model.vote;
 
 import com.example.taskblock.model.task.Task;
+import com.example.taskblock.model.user.Member;
 import com.example.taskblock.model.user.User;
 import jakarta.persistence.*;
 
@@ -20,8 +21,8 @@ public class Vote {
         this.id = id;
     }
 
-    public User getSender() {
-        return sender;
+    public Member getSender() {
+        return (Member) sender;
     }
 
     public void setSender(User sender) {

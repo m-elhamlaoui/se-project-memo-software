@@ -1,6 +1,10 @@
 package com.example.taskblock.model.task;
 
+import com.example.taskblock.model.notification.TaskObserver;
+import com.example.taskblock.model.notification.TaskSubject;
 import com.example.taskblock.model.taskblock.TaskBlock;
+import com.example.taskblock.model.user.Member;
+import com.example.taskblock.model.user.User;
 import com.example.taskblock.model.vote.Vote;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -14,7 +18,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "tasks")
-public class Task {
+public class Task implements TaskSubject {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -63,7 +67,16 @@ public class Task {
     }
 
     public void setStatus(TaskStatus status) {
+        TaskStatus oldStatus = this.status;
         this.status = status;
+
+        if (oldStatus == TaskStatus.PENDING) {
+            if (status == TaskStatus.ACCEPTED) {
+                notifyTaskAccepted(this);
+            } else if (status == TaskStatus.REJECTED) {
+                notifyTaskRejected(this);
+            }
+        }
     }
 
     public TaskBlock getTaskBlock() {
@@ -107,12 +120,6 @@ public class Task {
         this.taskBlock = taskBlock;
     }
 
-    // Methods
-    public void addVote(Vote vote) {
-        vote.setTask(this);
-        this.votes.add(vote);
-    }
-
     public void removeVote(Vote vote) {
         this.votes.remove(vote);
         vote.setTask(null);
@@ -126,5 +133,50 @@ public class Task {
             this.status = TaskStatus.REJECTED;
         }
     }
+    @PreRemove
+    private void cleanupObservers() {
+        observers.clear();
+    }
+    @Transient
+    private List<TaskObserver> observers = new ArrayList<>();
+
+    @Override
+    public void addObserver(TaskObserver observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void removeObserver(TaskObserver observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyVoteCast(Task task, Member voter) {
+        for (TaskObserver observer : observers) {
+            observer.onVoteCast(task, voter);
+        }
+    }
+
+    @Override
+    public void notifyTaskAccepted(Task task) {
+        for (TaskObserver observer : observers) {
+            observer.onTaskAccepted(task);
+        }
+    }
+
+    @Override
+    public void notifyTaskRejected(Task task) {
+        for (TaskObserver observer : observers) {
+            observer.onTaskRejected(task);
+        }
+    }
+
+    public void addVote(Vote vote) {
+        vote.setTask(this);
+        this.votes.add(vote);
+        notifyVoteCast(this, vote.getSender());
+    }
+
+
 
 }

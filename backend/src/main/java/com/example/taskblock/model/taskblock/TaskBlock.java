@@ -174,14 +174,20 @@ public class TaskBlock {
     }
 
     public void evaluateTask(Task task) {
-        // Update the task if the percentage and vote duration rules apply
+        TaskStatus oldStatus = task.getStatus();
         task.checkAndRejectIfExpired();
 
-        // Compute vote percentage dynamically and update the status if applicable
         if (task.getStatus() == TaskStatus.PENDING && voteRepository != null && percentageAcceptanceStrategy != null) {
             Double votePercentage = voteRepository.calculateVotePercentage(task.getId());
-            if (percentageAcceptanceStrategy.shouldAccept(votePercentage)) {
+            if (votePercentage != null && percentageAcceptanceStrategy.shouldAccept(votePercentage)) {
                 task.setStatus(TaskStatus.ACCEPTED);
+            }
+        }
+        if (task.getStatus() != oldStatus) {
+            if (task.getStatus() == TaskStatus.ACCEPTED) {
+                task.notifyTaskAccepted(task);
+            } else if (task.getStatus() == TaskStatus.REJECTED) {
+                task.notifyTaskRejected(task);
             }
         }
     }
