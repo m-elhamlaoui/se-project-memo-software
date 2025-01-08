@@ -83,7 +83,7 @@ public class WalletAndTaskBlockTest {
 
     @Test
     public void testAddingTaskToTaskBlock() {
-        Task task = new Task("Setup Environment", "Prepare the development environment", TaskStatus.PENDING, taskBlock);
+        Task task = new Task("Setup Environment", "Prepare the development environment",  taskBlock,100);
         taskBlock.addTask(task);
 
         assertTrue(taskBlock.getTasks().contains(task));

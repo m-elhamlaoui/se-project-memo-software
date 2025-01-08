@@ -38,6 +38,17 @@ public class Task implements TaskSubject {
     @JoinColumn(name = "taskblock_id", nullable = false)
     private TaskBlock taskBlock;
 
+    @Column(name = "duration_seconds", nullable = false)
+    private Integer durationSeconds = 0;
+    // Add getter and setter
+    public Integer getDurationSeconds() {
+        return durationSeconds;
+    }
+
+    public void setDurationSeconds(Integer durationSeconds) {
+        this.durationSeconds = durationSeconds;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -113,11 +124,12 @@ public class Task implements TaskSubject {
         this.status = TaskStatus.PENDING;
         this.taskBlock = taskBlock;
     }
-    public Task(String title, String description, TaskStatus status, TaskBlock taskBlock) {
+    public Task(String title, String description, TaskBlock taskBlock, Integer durationSeconds) {
         this.title = title;
         this.description = description;
-        this.status = status;
+        this.status = TaskStatus.PENDING;
         this.taskBlock = taskBlock;
+        this.durationSeconds = durationSeconds;
     }
 
     public void removeVote(Vote vote) {

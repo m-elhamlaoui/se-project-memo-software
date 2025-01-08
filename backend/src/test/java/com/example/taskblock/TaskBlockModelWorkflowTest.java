@@ -75,7 +75,7 @@ public class TaskBlockModelWorkflowTest {
 
     @Test
     public void testTaskBlockWorkflow() {
-        Task task = new Task("Implement Feature X", "Develop backend logic for feature X", TaskStatus.PENDING, taskBlock);
+        Task task = new Task("Implement Feature X", "Develop backend logic for feature X", taskBlock,100);
         taskBlock.addTask(task);
 
         assertNotNull(taskBlock.getTasks());
