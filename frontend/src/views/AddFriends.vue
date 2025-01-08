@@ -1,68 +1,139 @@
 <template>
-  <div class="discussion-wrapper">
-<div class="discussion-history">
-    
-        <div class="user-search-container">
-        <h2 class="font-semibold text-lg mb-4 text-center">User Directory</h2>
-    
-        <!-- Search Bar -->
-        <input
-          type="text"
-          v-model="searchQuery"
-          placeholder="Search for users..."
-          class="search-bar w-full p-2 border border-gray-300 rounded-md mb-4"
-        />
-    
-        <!-- User List -->
-        <ul v-if="filteredUsers.length" class="user-list space-y-2">
-          <li
-            v-for="(user, index) in filteredUsers"
-            :key="index"
-            class="user-item flex justify-between items-center bg-gray-100 p-3 rounded-md shadow-sm"
-          >
-            <!-- Username -->
-            <span class="username font-medium">{{ user.username }}</span>
-    
-            <!-- Button or Friend Label -->
-            <div>
-              <button
-                v-if="!isFriend(user.username)"
-                @click="sendInvite(user.username)"
-                class="send-invite-btn bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md"
-              >
-                Send Invite
-              </button>
-              <span
-                v-else
-                class="friend-label text-green-600 font-semibold"
-              >
-                Friend
-              </span>
-            </div>
-          </li>
-        </ul>
-    
-        <!-- No Users Found -->
-        <p v-else class="text-gray-500 text-center">No users match your search.</p>
-      </div>
-    
-    
-</div>
+  <div class="h-screen w-[100%]  flex flex-col bg-gray-50">
+    <!-- Main Container - fills entire height and width -->
+    <div class="w-full h-full flex flex-col overflow-hidden">
+      <!-- Header Section - fixed height -->
+      <div class="bg-gradient-to-r from-green-500 to-green-600 p-4 flex-shrink-0">
+        <h2 class="text-xl font-bold text-white mb-2">Find Friends</h2>
+    <div class="relative">
+  <input
+    type="text"
+    v-model="searchQuery"
+    placeholder="Type to search users..."
+    class="w-full py-3 rounded-lg pl-12 pr-4 bg-white/10 backdrop-blur-sm text-white placeholder-white/70 border border-white/20 focus:outline-none focus:ring-2 focus:ring-white/50 transition-all"
+    @focus="handleFocus"
+  />
+  <div class="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
+    <SearchIcon class="h-5 w-5 text-white/70" />
+  </div>
+</div> 
 
-    
+
+
+      </div>
+
+      <!-- Results Section - scrollable -->
+      <div class="flex-1 overflow-y-auto p-4">
+        <div v-if="searchQuery" class="space-y-2">
+          <!-- Loading State -->
+          <div v-if="isLoading" class="flex items-center justify-center py-8">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+          </div>
+
+          <!-- Results List -->
+          <div v-else>
+            <transition-group 
+              name="list" 
+              tag="ul" 
+              class="space-y-2"
+            >
+              <li
+                v-for="(user, index) in filteredUsers"
+                :key="user.username"
+                class="bg-white rounded-lg p-4 flex items-center justify-between transform hover:scale-[1.01] transition-all cursor-pointer shadow-sm"
+                :style="{ animationDelay: `${index * 50}ms` }"
+              >
+                <div class="flex items-center space-x-4">
+                  <div class="w-10 h-10 rounded-full bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center flex-shrink-0">
+                    <span class="text-black-600 font-medium">
+                      {{ user.username.charAt(0).toUpperCase() }}
+                    </span>
+                  </div>
+                  <div class="min-w-0">
+                    <h3 class="font-medium text-gray-900 truncate">{{ user.username }}</h3>
+                    <p class="text-sm text-gray-500">
+                      {{ isFriend(user.username) ? 'Friend' : 'User' }}
+                    </p>
+                  </div>
+                </div>
+
+                <div class="flex-shrink-0 ml-4">
+                  <button
+                    v-if="!isFriend(user.username)"
+                    @click.stop="sendInvite(user.username)"
+                    class="inline-flex items-center px-4 py-2 rounded-lg bg-green-500 text-white hover:bg-green-600 transition-colors"
+                  >
+                    <UserAddIcon class="h-4 w-4 mr-2" />
+                    <span class="whitespace-nowrap">Add Friend</span>
+                  </button>
+                  <span
+                    v-else
+                    class="inline-flex items-center px-4 py-2 rounded-lg bg-green-100 text-green-700"
+                  >
+                    <CheckIcon class="h-4 w-4 mr-2" />
+                    <span class="whitespace-nowrap">Friends</span>
+                  </span>
+                </div>
+              </li>
+            </transition-group>
+
+            <!-- Empty State -->
+            <div 
+              v-if="filteredUsers.length === 0" 
+              class="bg-white rounded-lg p-8 text-center shadow-sm"
+            >
+              <div class="text-gray-400">
+                <UserXIcon class="h-12 w-12 mx-auto mb-2" />
+                <p class="text-lg font-medium">No users found</p>
+                <p class="text-sm">Try searching with a different username</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Initial State -->
+        <div 
+          v-else 
+          class="bg-white rounded-lg p-8 text-center shadow-sm"
+        >
+          <div class="text-gray-400">
+            <UsersIcon class="h-12 w-12 mx-auto mb-2" />
+            <p class="text-lg font-medium">Search for friends</p>
+            <p class="text-sm">Start typing to find people</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
-
 <script>
+import { 
+  SearchIcon, 
+  UserAddIcon, 
+  CheckIcon, 
+  UsersIcon,
+  UserXIcon 
+} from '@heroicons/vue/outline'
+
 export default {
+  components: {
+    SearchIcon,
+    UserAddIcon,
+    CheckIcon,
+    UsersIcon,
+    UserXIcon
+  },
+
   data() {
     return {
-        friends: [
+      searchQuery: '',
+      isLoading: false,
+      friends: [
         "JohnDoe",
-        "JaneSmith" ,
-        "CoolCoder123" ,
-        "VueMaster" ,
+        "JaneSmith",
+        "CoolCoder123",
+        "VueMaster",
       ],
       users: [
         { username: "JohnDoe" },
@@ -71,225 +142,97 @@ export default {
         { username: "VueMaster" },
         { username: "NotYourFriend" },
         { username: "FutureFriend" },
-      ],
-       searchQuery: "",
-  
-    };
+        { username: "TestUser1" },
+        { username: "TestUser2" },
+        { username: "TestUser3" },
+        { username: "TestUser4" },
+      ]
+    }
   },
+
   computed: {
-    // Filter users based on search query
     filteredUsers() {
-        if (this.searchQuery.toLowerCase().trim() === ""){
-            return []
-        }
-      return this.users.filter((user) =>
+      if (!this.searchQuery.trim()) {
+        return []
+      }
+      return this.users.filter(user =>
         user.username.toLowerCase().includes(this.searchQuery.toLowerCase())
-      );
-    },
+      )
+    }
   },
+
   methods: {
-     isFriend(username) {
-      // Check if a user is already a friend
-      return this.friends.includes(username);
+    handleFocus() {
+      // Add any focus handling if needed
     },
-    sendInvite(username) {
-      alert(`Invite sent to ${username}!`);
+
+    isFriend(username) {
+      return this.friends.includes(username)
     },
-  
+
+    async sendInvite(username) {
+      this.isLoading = true
+      await new Promise(resolve => setTimeout(resolve, 500))
+      alert(`Friend request sent to ${username}!`)
+      this.isLoading = false
+    }
   },
-};
+
+  watch: {
+    searchQuery(newVal) {
+      if (newVal) {
+        this.isLoading = true
+        setTimeout(() => {
+          this.isLoading = false
+        }, 300)
+      }
+    }
+  }
+}
 </script>
 
 <style scoped>
-.discussion-wrapper {
-  display: flex;
-  width:100%;
-  flex-direction: column;
-  height: 100vh;
-  background-color: rgba(229, 231, 235, 0.8);
+/* Transitions for list items */
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.3s ease;
 }
 
-.return-link {
-  padding: 16px;
-  background-color: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(10px);
-  border-radius: 12px;
-  margin: 16px;
+.list-enter-from {
+  opacity: 0;
+  transform: translateX(-30px);
 }
 
-.discussion-history {
-  flex: 1;
-  overflow-y: auto;
-  padding: 16px;
-  background-color: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(10px);
-  border-radius: 12px;
-  margin: 16px;
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
 }
 
-.message-card {
-  margin-bottom: 16px;
-  padding: 12px;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  background-color: white;
-  transition: transform 0.3s ease-in-out, background-color 0.3s;
+/* Custom scrollbar */
+.overflow-y-auto {
+  scrollbar-width: thin;
+  scrollbar-color: #CBD5E0 transparent;
 }
 
-.vote-status-tag {
-  transform: translateY(-50%);
+.overflow-y-auto::-webkit-scrollbar {
+  width: 4px;
 }
 
-
-.task-card {
-  cursor: pointer;
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: transparent;
 }
 
-.task-title {
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 8px;
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background-color: #CBD5E0;
+  border-radius: 2px;
 }
 
-.progress-bar {
-  margin-top: 8px;
+.overflow-y-auto:hover::-webkit-scrollbar-thumb {
+  background-color: #A0AEC0;
 }
 
-.bar-container {
-  background-color: #e5e7eb;
-  height: 8px;
-  border-radius: 4px;
-  overflow: hidden;
+/* Ensure text truncation works */
+.truncate {
+  max-width: 200px;
 }
-
-.bar {
-  height: 8px;
-  transition: width 0.3s;
-}
-
-.accepted-bar {
-  background-color: #4caf50;
-}
-
-.rejected-bar {
-  background-color: #f44336;
-}
-
-.chain-animation .chain-icon {
-  width: 32px;
-  height: 32px;
-  stroke: #4caf50;
-}
-
-.input-bar {
-  display: flex;
-  gap: 12px;
-  padding: 16px;
-  background-color: white;
-  border-top: 1px solid #e5e7eb;
-}
-
-.input-field {
-  flex: 1;
-  padding: 8px 12px;
-  border-radius: 6px;
-  border: 1px solid #e5e7eb;
-  font-size: 16px;
-}
-
-.send-btn {
-  background-color: rgb(36, 162, 36);
-  color: white;
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-size: 16px;
-  transition: background-color 0.3s;
-}
-
-.send-btn:hover {
-  background-color: rgb(2, 102, 2);
-}
-
-.input-bar {
-  background: rgba(255, 255, 255, 0.9);
-  padding: 16px;
-  border-radius: 8px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-/* Task Input */
-.input-field {
-  padding: 8px 12px;
-  border-radius: 4px;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  font-size: 14px;
-  margin-bottom: 8px;
-}
-
-/* Dropdown for Assigning Members */
-.dropdown {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.dropdown-select {
-  padding: 8px 12px;
-  border-radius: 4px;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  font-size: 14px;
-  min-width: 150px;
-}
-.dropdown-add-btn {
-  background: rgba(0, 100, 200, 0.8);
-  color: white;
-  padding: 8px 12px;
-  border-radius: 4px;
-  border: none;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-.dropdown-add-btn:hover {
-  background: rgba(0, 100, 200, 1);
-}
-
-/* Subgroups Tags Input */
-.subgroups-input {
-  display: flex;
-  flex-direction: column;
-}
-.subgroup-input-field {
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  padding: 8px;
-  border-radius: 4px;
-  font-size: 14px;
-  margin-bottom: 8px;
-  width: 100%;
-}
-.tags-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 8px;
-}
-.tag {
-  background: rgba(0, 0, 0, 0.1);
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-}
-.tag-remove-btn {
-  margin-left: 8px;
-  background: none;
-  border: none;
-  color: rgba(200, 0, 0, 0.8);
-  cursor: pointer;
-  font-size: 16px;
-}
-
-
 </style>

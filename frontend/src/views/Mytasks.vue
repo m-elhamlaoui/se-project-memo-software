@@ -2,74 +2,104 @@
   <div class="discussion-wrapper">
     <!-- Return Link -->
     <div class="return-link">
-      <a href="/" class="text-green-500 hover:text-green-700 font-medium">
-        &larr; Back to Dashboard
+      <a href="/" class="inline-flex items-center text-green-500 hover:text-green-700 font-medium group">
+        <span class="mr-2 transform group-hover:-translate-x-1 transition-transform">&larr;</span>
+        Back to Dashboard
       </a>
     </div>
 
     <!-- Discussion History -->
     <div class="discussion-history">
-     <div
-  v-for="(message, index) in tasks"
-  :key="index"
-  class="message-card relative"
->
-  <div class="flex justify-between items-center mb-2">
-    <span class="font-bold text-lg">{{ message.username }}</span>
-    <span class="text-sm text-gray-500">{{ message.timestamp }}</span>
-  </div>
+      <TransitionGroup 
+        name="list" 
+        tag="div" 
+        class="space-y-4"
+      >
+        <div
+          v-for="(message, index) in tasks"
+          :key="index"
+          class="message-card transform hover:scale-[1.01] transition-all duration-200"
+        >
+          <!-- Message Header -->
+          <div class="flex items-center justify-between mb-4 pb-3 border-b border-gray-100">
+            <div class="flex items-center space-x-3">
+              <!-- User Avatar -->
+              <div class="h-10 w-10 rounded-full bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center flex-shrink-0">
+                <span class="text-green-700 font-medium">
+                  {{ message.username.charAt(0).toUpperCase() }}
+                </span>
+              </div>
+              <div class="min-w-0">
+                <h3 class="font-bold text-gray-900 truncate">{{ message.username }}</h3>
+                <p class="text-sm text-gray-500">{{ message.timestamp }}</p>
+              </div>
+            </div>
+          </div>
 
-  <div
-    v-if="message.type === 'task'"
-    class="task-card flex relative"
-    @click="toggleTaskDetails(index)"
-  >
-    
+          <div
+            v-if="message.type === 'task'"
+            class="task-card"
+            @click="toggleTaskDetails(index)"
+          >
+            <div class="space-y-4">
+              <!-- Task Content -->
+              <div class="space-y-2">
+                <h4 class="task-title text-xl font-semibold text-gray-900">
+                  {{ message.content.title }}
+                </h4>
+                <p class="text-gray-600 text-sm leading-relaxed">
+                  {{ message.content.description }}
+                </p>
+              </div>
 
-    <div class="flex-1 ml-4">
-      <!-- Task Title -->
-      <p class="task-title font-semibold text-lg">{{ message.content.title }}</p>
+              <!-- Task Metadata -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Deadline -->
+                <div class="space-y-2">
+                  <p class="text-sm text-gray-600">
+                    <span class="inline-block w-20 font-medium">Deadline:</span>
+                    <span class="text-red-500">{{ message.content.deadline }}</span>
+                  </p>
+                </div>
 
-      <!-- Task Description -->
-      <p class="task-desc w-96 text-sm text-gray-600 mt-1">
-        {{ message.content.description }}
-      </p>
+                <!-- Assignments -->
+                <div class="space-y-2">
+                  <!-- Assigned Subgroups -->
+                  <div class="flex flex-wrap gap-2">
+                    <span class="text-sm text-gray-600 font-medium">Subgroups:</span>
+                    <div class="flex flex-wrap gap-1">
+                      <span 
+                        v-for="(subgroup, idx) in message.content.assignedSubgroups" 
+                        :key="idx"
+                        class="inline-flex items-center px-2 py-1 bg-gray-100 rounded-full text-xs text-gray-700"
+                      >
+                        @{{ subgroup }}
+                      </span>
+                    </div>
+                  </div>
 
-      <!-- Task Deadline -->
-      <p class="task-deadline text-sm text-gray-600 mt-1 font-medium">
-        Deadline: 
-        <span class="text-red-500">{{ message.content.deadline }}</span>
-      </p>
+                  <!-- Assigned Users -->
+                  <div class="flex flex-wrap gap-2">
+                    <span class="text-sm text-gray-600 font-medium">Users:</span>
+                    <div class="flex flex-wrap gap-1">
+                      <span 
+                        v-for="(user, idx) in message.content.assignedUsers" 
+                        :key="idx"
+                        class="inline-flex items-center px-2 py-1 bg-blue-100 rounded-full text-xs text-blue-700"
+                      >
+                        {{ user }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
 
-     
-
-        <!-- Assigned Subgroups -->
-        <p class="task-assigned-subgroups text-sm text-gray-600 mt-1">
-          Assigned to Subgroups: 
-          <span class="font-medium text-gray-800">{{ message.content.assignedSubgroups.map((x) => "@ "+x).join(", ") }}</span>
-        </p>
-
-        <!-- Assigned Users -->
-        <p class="task-assigned-users text-sm text-gray-600 mt-1">
-          Assigned to Users: 
-          <span class="font-medium text-gray-800">{{ message.content.assignedUsers.join(", ") }}</span>
-        </p>
-
-    
-
-   
+          <div v-else class="text-gray-700">{{ message.content }}</div>
+        </div>
+      </TransitionGroup>
     </div>
-  </div>
-
-  <div v-else class="text-gray-700">{{ message.content }}</div>
-
-  
-</div>
-
-
-  </div>
-
-    
   </div>
 </template>
 

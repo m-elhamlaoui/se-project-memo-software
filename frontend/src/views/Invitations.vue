@@ -1,267 +1,148 @@
 <template>
-  <div class="discussion-wrapper">
-    
-    <!-- Discussion History -->
-    <div class="discussion-history">
-        <div class="friends-list-container">
-    <h2 class="font-semibold text-lg mb-4">My Invitations</h2>
-
-    <!-- invitations List -->
-    <ul v-if="invitations.length" class="friends-list space-y-2">
-      <li
-        v-for="(friend, index) in invitations"
-        :key="index"
-        class="friend-item flex justify-between items-center bg-gray-100 p-3 rounded-md shadow-sm"
-      >
-        <!-- Friend Username -->
-        <span class="username font-medium">{{ friend.username }}</span>
-
-        <!-- Remove Button and Add Button -->
-        <div>
-            <button
-              @click="addFriend(friend.username)"
-              class="remove-btn bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-md"
-            >
-              Accept
-            </button>
-             <button
-              @click="removeFriend(friend.username)"
-              class="ml-10 remove-btn bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md"
-            >
-              Refuse
-            </button>
+  <div class="discussion-wrapper w-full">
+    <div class="discussion-history ">
+      <div class="friends-list-container ">
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-xl font-bold text-gray-800">Invitations</h2>
+          <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
+            {{ invitations.length }} invitations
+          </span>
         </div>
-      </li>
-    </ul>
 
-    <!-- No invitations Message -->
-    <p v-else class="text-gray-500 text-center">You don't have any Invitations yet.</p>
-  </div>
+        <!-- Friends List -->
+        <TransitionGroup 
+          name="list" 
+          tag="ul" 
+          class="space-y-3"
+        >
+          <li
+            v-for="friend in invitations"
+            :key="friend.username"
+            class="bg-white rounded-lg p-4 shadow-sm flex items-center justify-between transform hover:scale-[1.01] transition-all duration-200"
+          >
+            <!-- Friend Info -->
+            <div class="flex items-center space-x-3">
+              <!-- Avatar -->
+              <div class="h-10 w-10 rounded-full bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center flex-shrink-0">
+                <span class="text-green-600 font-medium">
+                  {{ friend.username.charAt(0).toUpperCase() }}
+                </span>
+              </div>
+              <!-- Username -->
+              <div class="flex flex-col">
+                <span class="font-medium text-gray-900">{{ friend.username }}</span>
+              </div>
+            </div>
 
-    
+            <!-- Actions -->
+            <div class="flex items-center space-x-2">
+              <button
+                @click="removeFriend(friend.username)"
+                class="inline-flex items-center px-3 py-2 rounded-lg text-sm font-medium text-green-600 hover:bg-green-50 transition-colors"
+              >
+                Accept
+              </button>
 
-  </div>
+              <button
+                @click="removeFriend(friend.username)"
+                class="inline-flex items-center px-3 py-2 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
+              >
+                Remove
+              </button>
+            </div>
+          </li>
+        </TransitionGroup>
 
-    
+        <!-- Empty State -->
+        <div 
+          v-if="!invitations.length" 
+          class="text-center py-12 bg-white rounded-lg shadow-sm"
+        >
+          <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center">
+            <UserIcon class="h-8 w-8 text-gray-400" />
+          </div>
+          <h3 class="text-lg font-medium text-gray-900 mb-1">No Invitations Yet</h3>
+          <p class="text-gray-500">Start adding friends </p>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
-
 <script>
+import { UserIcon } from '@heroicons/vue/outline'
+
 export default {
+  components: {
+    UserIcon
+  },
+
   data() {
     return {
-         invitations: [
+      invitations: [
         { username: "JohnDoe" },
         { username: "JaneSmith" },
         { username: "CoolCoder123" },
         { username: "VueMaster" },
       ],
-  
-    };
-  },
-  methods: {
-    removeFriend(username){
-        "hi there"
-    },
-    addFriend(username){
-        "hi there"
     }
-  
   },
-};
+
+  methods: {
+    removeFriend(username) {
+      // Implement remove friend logic here
+      console.log(`Removing friend: ${username}`)
+    }
+  },
+}
 </script>
 
 <style scoped>
 .discussion-wrapper {
-  display: flex;
-  width:100%;
-  flex-direction: column;
-  height: 100vh;
-  background-color: rgba(229, 231, 235, 0.8);
-}
-
-.return-link {
-  padding: 16px;
-  background-color: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(10px);
-  border-radius: 12px;
-  margin: 16px;
+  @apply h-screen flex flex-col bg-gray-50;
 }
 
 .discussion-history {
-  flex: 1;
-  overflow-y: auto;
-  padding: 16px;
-  background-color: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(10px);
-  border-radius: 12px;
-  margin: 16px;
+  @apply flex-1 overflow-y-auto p-4;
 }
 
-.message-card {
-  margin-bottom: 16px;
-  padding: 12px;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  background-color: white;
-  transition: transform 0.3s ease-in-out, background-color 0.3s;
+.friends-list-container {
+  @apply bg-white/80 backdrop-blur-lg rounded-xl p-6  mx-auto;
 }
 
-.vote-status-tag {
-  transform: translateY(-50%);
+/* List Transitions */
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.3s ease;
 }
 
-
-.task-card {
-  cursor: pointer;
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(-30px);
 }
 
-.task-title {
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 8px;
+/* Custom scrollbar */
+.discussion-history {
+  scrollbar-width: thin;
+  scrollbar-color: #CBD5E0 transparent;
 }
 
-.progress-bar {
-  margin-top: 8px;
+.discussion-history::-webkit-scrollbar {
+  width: 4px;
 }
 
-.bar-container {
-  background-color: #e5e7eb;
-  height: 8px;
-  border-radius: 4px;
-  overflow: hidden;
+.discussion-history::-webkit-scrollbar-track {
+  background: transparent;
 }
 
-.bar {
-  height: 8px;
-  transition: width 0.3s;
+.discussion-history::-webkit-scrollbar-thumb {
+  background-color: #CBD5E0;
+  border-radius: 2px;
 }
 
-.accepted-bar {
-  background-color: #4caf50;
+.discussion-history:hover::-webkit-scrollbar-thumb {
+  background-color: #A0AEC0;
 }
-
-.rejected-bar {
-  background-color: #f44336;
-}
-
-.chain-animation .chain-icon {
-  width: 32px;
-  height: 32px;
-  stroke: #4caf50;
-}
-
-.input-bar {
-  display: flex;
-  gap: 12px;
-  padding: 16px;
-  background-color: white;
-  border-top: 1px solid #e5e7eb;
-}
-
-.input-field {
-  flex: 1;
-  padding: 8px 12px;
-  border-radius: 6px;
-  border: 1px solid #e5e7eb;
-  font-size: 16px;
-}
-
-.send-btn {
-  background-color: rgb(36, 162, 36);
-  color: white;
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-size: 16px;
-  transition: background-color 0.3s;
-}
-
-.send-btn:hover {
-  background-color: rgb(2, 102, 2);
-}
-
-.input-bar {
-  background: rgba(255, 255, 255, 0.9);
-  padding: 16px;
-  border-radius: 8px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-/* Task Input */
-.input-field {
-  padding: 8px 12px;
-  border-radius: 4px;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  font-size: 14px;
-  margin-bottom: 8px;
-}
-
-/* Dropdown for Assigning Members */
-.dropdown {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.dropdown-select {
-  padding: 8px 12px;
-  border-radius: 4px;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  font-size: 14px;
-  min-width: 150px;
-}
-.dropdown-add-btn {
-  background: rgba(0, 100, 200, 0.8);
-  color: white;
-  padding: 8px 12px;
-  border-radius: 4px;
-  border: none;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-.dropdown-add-btn:hover {
-  background: rgba(0, 100, 200, 1);
-}
-
-/* Subgroups Tags Input */
-.subgroups-input {
-  display: flex;
-  flex-direction: column;
-}
-.subgroup-input-field {
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  padding: 8px;
-  border-radius: 4px;
-  font-size: 14px;
-  margin-bottom: 8px;
-  width: 100%;
-}
-.tags-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 8px;
-}
-.tag {
-  background: rgba(0, 0, 0, 0.1);
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-}
-.tag-remove-btn {
-  margin-left: 8px;
-  background: none;
-  border: none;
-  color: rgba(200, 0, 0, 0.8);
-  cursor: pointer;
-  font-size: 16px;
-}
-
-
 </style>

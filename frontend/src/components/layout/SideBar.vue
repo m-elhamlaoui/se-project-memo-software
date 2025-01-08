@@ -24,7 +24,7 @@
       TaskBlocks
     </h1>
       <!-- Tooltip -->
-      <span v-if="isCollapsed" class="sidebar-tooltip absolute left-full ml-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 ease-in-out">
+      <span v-if="isCollapsed" class="sidebar-tooltip absolute left-full ml-2  group-hover:opacity-100 transition-opacity duration-200 ease-in-out">
         TaskBlocks
       </span>
     </div>
@@ -37,7 +37,7 @@
       My tasks
     </h1>
       <!-- Tooltip -->
-      <span v-if="isCollapsed" class="sidebar-tooltip absolute left-full ml-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 ease-in-out">
+      <span v-if="isCollapsed" class="sidebar-tooltip absolute left-full ml-2  group-hover:opacity-100 transition-opacity duration-200 ease-in-out">
         My tasks
       </span>
     </div>
@@ -48,7 +48,7 @@
       My Friends
     </h1>
       <!-- Tooltip -->
-      <span v-if="isCollapsed" class="sidebar-tooltip absolute left-full ml-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 ease-in-out">
+      <span v-if="isCollapsed" class="sidebar-tooltip absolute left-full ml-2  group-hover:opacity-100 transition-opacity duration-200 ease-in-out">
        My Friends
       </span>
     </div>
@@ -61,7 +61,7 @@
       Create TaskBlock
     </h1>
       <!-- Tooltip -->
-      <span v-if="isCollapsed" class="sidebar-tooltip absolute left-full ml-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 ease-in-out">
+      <span v-if="isCollapsed" class="sidebar-tooltip absolute left-full ml-2  group-hover:opacity-100 transition-opacity duration-200 ease-in-out">
        Create TaskBlock
       </span>
     </div>
@@ -73,7 +73,7 @@
       Add Friends
     </h1>
       <!-- Tooltip -->
-      <span v-if="isCollapsed" class="sidebar-tooltip absolute left-full ml-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 ease-in-out">
+      <span v-if="isCollapsed" class="sidebar-tooltip absolute left-full ml-2  group-hover:opacity-100 transition-opacity duration-200 ease-in-out">
        Add Friends
       </span>
     </div>
@@ -85,7 +85,7 @@
       Invitations
     </h1>
       <!-- Tooltip -->
-      <span v-if="isCollapsed" class="sidebar-tooltip absolute left-full ml-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 ease-in-out">
+      <span v-if="isCollapsed" class="sidebar-tooltip absolute left-full ml-2  group-hover:opacity-100 transition-opacity duration-200 ease-in-out">
        Invitations
       </span>
     </div>
@@ -107,7 +107,7 @@
       <h1 v-if="!isCollapsed">Logout</h1>
     </button>
     <!-- Tooltip for Logout -->
-    <span class="sidebar-tooltip absolute left-full ml-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+    <span class="sidebar-tooltip  absolute left-full ml-2  group-hover:opacity-100 transition-opacity duration-200">
       Logout
     </span>
   </div>
