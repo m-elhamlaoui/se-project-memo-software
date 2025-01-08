@@ -11,6 +11,8 @@
     "@heroicons/vue": "^1.0.6",
     "aos": "^2.3.4",
     "axios": "^1.7.9",
+    "bootstrap": "^5.3.3",
+    "bootstrap-vue-3": "^0.5.1",
     "core-js": "^3.8.3",
     "firebase": "^11.1.0",
     "vue": "^3.2.13",

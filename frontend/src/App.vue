@@ -51,6 +51,8 @@
 
 <script>
 import { StarIcon } from '@heroicons/vue/solid';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-vue-3/dist/bootstrap-vue-3.css';
 
 export default {
   data(){

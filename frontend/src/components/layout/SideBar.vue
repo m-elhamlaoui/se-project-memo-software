@@ -15,12 +15,11 @@
       </button>
     </div>
 
-    <!-- Sidebar Icons -->
    <!-- Sidebar Icons -->
 <div class="flex-1">
     <!-- Sidebar Icon with Tooltip -->
     <div :class="[isCollapsed ? 'sidebar-icon' : 'sidebar-icon-not-collapsed', 'group relative flex items-center', 'transition-all duration-300 ease-in-out']">
-      <LogoutIcon :class="['h-6 w-6', !isCollapsed ? 'mr-3':'']" />
+      <CubeIcon :class="['h-6 w-6', !isCollapsed ? 'mr-3':'']" />
       <h1 v-if="!isCollapsed" class="text-white transition-opacity duration-300 ease-in-out opacity-100">
       TaskBlocks
     </h1>
@@ -33,7 +32,7 @@
 
 
     <div :class="[isCollapsed ? 'sidebar-icon' : 'sidebar-icon-not-collapsed', 'group relative flex items-center', 'transition-all duration-300 ease-in-out']">
-      <LogoutIcon :class="['h-6 w-6', !isCollapsed ? 'mr-3':'']" />
+      <CalendarIcon :class="['h-6 w-6', !isCollapsed ? 'mr-3':'']" />
       <h1 v-if="!isCollapsed" class="text-white transition-opacity duration-300 ease-in-out opacity-100">
       My tasks
     </h1>
@@ -43,6 +42,56 @@
       </span>
     </div>
 
+     <div :class="[isCollapsed ? 'sidebar-icon' : 'sidebar-icon-not-collapsed', 'group relative flex items-center', 'transition-all duration-300 ease-in-out']">
+      <UserCircleIcon :class="['h-6 w-6', !isCollapsed ? 'mr-3':'']" />
+      <h1 v-if="!isCollapsed" class="text-white transition-opacity duration-300 ease-in-out opacity-100">
+      My Friends
+    </h1>
+      <!-- Tooltip -->
+      <span v-if="isCollapsed" class="sidebar-tooltip absolute left-full ml-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 ease-in-out">
+       My Friends
+      </span>
+    </div>
+
+
+
+    <div :class="[isCollapsed ? 'sidebar-icon' : 'sidebar-icon-not-collapsed', 'group relative flex items-center', 'transition-all duration-300 ease-in-out']">
+      <PlusSmIcon :class="['h-6 w-6', !isCollapsed ? 'mr-3':'']" />
+      <h1 v-if="!isCollapsed" class="text-white transition-opacity duration-300 ease-in-out opacity-100">
+      Create TaskBlock
+    </h1>
+      <!-- Tooltip -->
+      <span v-if="isCollapsed" class="sidebar-tooltip absolute left-full ml-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 ease-in-out">
+       Create TaskBlock
+      </span>
+    </div>
+
+
+     <div :class="[isCollapsed ? 'sidebar-icon' : 'sidebar-icon-not-collapsed', 'group relative flex items-center', 'transition-all duration-300 ease-in-out']">
+      <UserAddIcon :class="['h-6 w-6', !isCollapsed ? 'mr-3':'']" />
+      <h1 v-if="!isCollapsed" class="text-white transition-opacity duration-300 ease-in-out opacity-100">
+      Add Friends
+    </h1>
+      <!-- Tooltip -->
+      <span v-if="isCollapsed" class="sidebar-tooltip absolute left-full ml-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 ease-in-out">
+       Add Friends
+      </span>
+    </div>
+
+
+      <div :class="[isCollapsed ? 'sidebar-icon' : 'sidebar-icon-not-collapsed', 'group relative flex items-center', 'transition-all duration-300 ease-in-out']">
+      <InboxIcon :class="['h-6 w-6', !isCollapsed ? 'mr-3':'']" />
+      <h1 v-if="!isCollapsed" class="text-white transition-opacity duration-300 ease-in-out opacity-100">
+      Invitations
+    </h1>
+      <!-- Tooltip -->
+      <span v-if="isCollapsed" class="sidebar-tooltip absolute left-full ml-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 ease-in-out">
+       Invitations
+      </span>
+    </div>
+
+
+   
     
     
 </div>
@@ -67,18 +116,24 @@
 </template>
 
 <script>
-import { ArrowLeftIcon, ArrowRightIcon, LogoutIcon } from '@heroicons/vue/solid';
+import {InboxIcon, UserAddIcon, UserCircleIcon, ArrowLeftIcon, ArrowRightIcon, LogoutIcon ,CubeIcon, CalendarIcon,PlusSmIcon} from '@heroicons/vue/solid';
 
 export default {
   name: 'Sidebar',
   components: {
     ArrowLeftIcon,
     ArrowRightIcon,
-    LogoutIcon
+    LogoutIcon,
+    CubeIcon,
+    CalendarIcon,
+    PlusSmIcon,
+    UserCircleIcon,
+    UserAddIcon,
+    InboxIcon
   },
   data() {
     return {
-      isCollapsed: false, // Toggle for sidebar collapse state
+      isCollapsed: true, // Toggle for sidebar collapse state
     };
   },
   methods: {
@@ -93,11 +148,13 @@ export default {
 </script>
 
 <style scoped>
+
 /* Add some basic styling for the tooltip */
 .sidebar-tooltip {
   display: block;
   transform: scale(0);
   transition: opacity 0.2s ease-in-out;
+  z-index:100000
 }
 
 /* Always show tooltip on hover, even in collapsed state */

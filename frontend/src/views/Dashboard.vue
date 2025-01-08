@@ -1,8 +1,11 @@
 <template>
+  <CosmosBackground />
+
   <div class="flex">
-    <CosmosBackground />
+        <SideBar/>
+
     <!-- Your other content goes here -->
-    <SideBar/>
+    <router-view />
   </div>
 
 </template>
