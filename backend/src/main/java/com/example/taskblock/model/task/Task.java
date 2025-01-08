@@ -3,19 +3,15 @@ package com.example.taskblock.model.task;
 import com.example.taskblock.model.notification.TaskObserver;
 import com.example.taskblock.model.notification.TaskSubject;
 import com.example.taskblock.model.taskblock.TaskBlock;
+import com.example.taskblock.model.taskblock.TaskBlockGroup;
 import com.example.taskblock.model.user.Member;
-import com.example.taskblock.model.user.User;
 import com.example.taskblock.model.vote.Vote;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@Setter
 @Entity
 @Table(name = "tasks")
 public class Task implements TaskSubject {
@@ -40,6 +36,7 @@ public class Task implements TaskSubject {
 
     @Column(name = "duration_seconds", nullable = false)
     private Integer durationSeconds = 0;
+
     // Add getter and setter
     public Integer getDurationSeconds() {
         return durationSeconds;
@@ -124,6 +121,31 @@ public class Task implements TaskSubject {
         this.status = TaskStatus.PENDING;
         this.taskBlock = taskBlock;
     }
+
+    public List<TaskObserver> getObservers() {
+        return observers;
+    }
+
+    public void setObservers(List<TaskObserver> observers) {
+        this.observers = observers;
+    }
+
+    public List<TaskBlockGroup> getTaggedGroups() {
+        return taggedGroups;
+    }
+
+    public void setTaggedGroups(List<TaskBlockGroup> taggedGroups) {
+        this.taggedGroups = taggedGroups;
+    }
+
+    public List<Member> getTaggedIndividuals() {
+        return taggedIndividuals;
+    }
+
+    public void setTaggedIndividuals(List<Member> taggedIndividuals) {
+        this.taggedIndividuals = taggedIndividuals;
+    }
+
     public Task(String title, String description, TaskBlock taskBlock, Integer durationSeconds) {
         this.title = title;
         this.description = description;
@@ -189,6 +211,43 @@ public class Task implements TaskSubject {
         notifyVoteCast(this, vote.getSender());
     }
 
+    @ManyToMany
+    @JoinTable(
+            name = "task_tagged_individuals",
+            joinColumns = @JoinColumn(name = "task_id"),
+            inverseJoinColumns = @JoinColumn(name = "member_id")
+    )
+    @OrderColumn(name = "individual_order")
+    private List<Member> taggedIndividuals = new ArrayList<>();
 
+    @ManyToMany
+    @JoinTable(
+            name = "task_tagged_groups",
+            joinColumns = @JoinColumn(name = "task_id"),
+            inverseJoinColumns = @JoinColumn(name = "group_id")
+    )
+    @OrderColumn(name = "group_order")
+    private List<TaskBlockGroup> taggedGroups = new ArrayList<>();
+
+    // Helper methods for list management
+    public void addTaggedIndividual(Member member) {
+        if (!taggedIndividuals.contains(member)) {
+            taggedIndividuals.add(member);
+        }
+    }
+
+    public void removeTaggedIndividual(Member member) {
+        taggedIndividuals.remove(member);
+    }
+
+    public void addTaggedGroup(TaskBlockGroup group) {
+        if (!taggedGroups.contains(group)) {
+            taggedGroups.add(group);
+        }
+    }
+
+    public void removeTaggedGroup(TaskBlockGroup group) {
+        taggedGroups.remove(group);
+    }
 
 }
