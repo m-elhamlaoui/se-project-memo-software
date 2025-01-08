@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -17,6 +18,21 @@ import org.springframework.security.core.userdetails.UserDetails;
 public abstract class User implements UserDetails {
     private static final long serialVersionUID = 1L;
 
+    @ManyToMany
+    @JoinTable(
+            name = "member_friends",
+            joinColumns = @JoinColumn(name = "member_id"),
+            inverseJoinColumns = @JoinColumn(name = "friend_id")
+    )
+    private List<Member> friends = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "member_invitations",
+            joinColumns = @JoinColumn(name = "invited_id"),
+            inverseJoinColumns = @JoinColumn(name = "inviter_id")
+    )
+    private List<Member> inviters = new ArrayList<>();
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,7 +49,21 @@ public abstract class User implements UserDetails {
 
     private String profileImage;
 
+    public List<Member> getFriends() {
+        return friends;
+    }
 
+    public void addFriend(Member friend) {
+        this.friends.add(friend);
+    }
+
+    public List<Member> getInviters() {
+        return inviters;
+    }
+
+    public void addInviter(Member inviter) {
+        this.inviters.add(inviter);
+    }
 
     @Column(updatable = false)
     private LocalDateTime createdAt;

@@ -5,6 +5,7 @@ import com.example.taskblock.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +22,10 @@ public class TaskService {
     }
 
     public Task createTask(Task task) {
+        if (task.getDurationSeconds() < 0) {
+            throw new IllegalArgumentException("Duration cannot be negative");
+        }
+
         task.addObserver(notificationService);
         return taskRepository.save(task);
     }

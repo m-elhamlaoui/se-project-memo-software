@@ -14,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -24,6 +25,7 @@ import static org.mockito.Mockito.*;
 public class NotificationSystemTest {
     private NotificationRepository notificationRepository;
     private NotificationService notificationService;
+    private SimpMessagingTemplate messagingTemplate;
     private Member creator;
     private Member voter;
     private TaskBlock taskBlock;
@@ -33,7 +35,8 @@ public class NotificationSystemTest {
     void setUp() {
         // Mock repository
         notificationRepository = mock(NotificationRepository.class);
-        notificationService = new NotificationService(notificationRepository);
+        messagingTemplate = mock(SimpMessagingTemplate.class);
+        notificationService = new NotificationService(notificationRepository,messagingTemplate);
 
         // Set up test data
         creator = new Member();
