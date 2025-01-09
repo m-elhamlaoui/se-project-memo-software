@@ -22,6 +22,7 @@ const routes = [
   {
     path: '/dashboard',
     name: 'Dashboard',
+    meta: { requiresAuth: true },
     component: Dashboard,
     redirect: '/dashboard/taskblocks',
     children: [
@@ -101,7 +102,7 @@ const router = createRouter({
   routes
 });
 
-/*
+
 // Navigation Guard for Protected Routes
 router.beforeEach((to, from, next) => {
   const isAuthenticated = store.getters['auth/isAuthenticated'];
@@ -114,6 +115,6 @@ router.beforeEach((to, from, next) => {
     next();
   }
 });
-*/
+
 
 export default router;

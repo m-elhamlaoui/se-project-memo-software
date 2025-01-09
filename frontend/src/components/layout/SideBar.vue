@@ -18,7 +18,7 @@
    <!-- Sidebar Icons -->
 <div class="flex-1">
     <!-- Sidebar Icon with Tooltip -->
-    <div :class="[isCollapsed ? 'sidebar-icon' : 'sidebar-icon-not-collapsed', 'group relative flex items-center', 'transition-all duration-300 ease-in-out']">
+    <div @click="this.$router.push('/dashboard/taskblocks')" :class="[isCollapsed ? 'sidebar-icon' : 'sidebar-icon-not-collapsed', 'group relative flex items-center', 'transition-all duration-300 ease-in-out']">
       <CubeIcon :class="['h-6 w-6', !isCollapsed ? 'mr-3':'']" />
       <h1 v-if="!isCollapsed" class="text-white transition-opacity duration-300 ease-in-out opacity-100">
       TaskBlocks
@@ -31,7 +31,7 @@
 
 
 
-    <div :class="[isCollapsed ? 'sidebar-icon' : 'sidebar-icon-not-collapsed', 'group relative flex items-center', 'transition-all duration-300 ease-in-out']">
+    <div @click="this.$router.push('/dashboard/mytasks')" :class="[isCollapsed ? 'sidebar-icon' : 'sidebar-icon-not-collapsed', 'group relative flex items-center', 'transition-all duration-300 ease-in-out']">
       <CalendarIcon :class="['h-6 w-6', !isCollapsed ? 'mr-3':'']" />
       <h1 v-if="!isCollapsed" class="text-white transition-opacity duration-300 ease-in-out opacity-100">
       My tasks
@@ -42,7 +42,7 @@
       </span>
     </div>
 
-     <div :class="[isCollapsed ? 'sidebar-icon' : 'sidebar-icon-not-collapsed', 'group relative flex items-center', 'transition-all duration-300 ease-in-out']">
+     <div @click="this.$router.push('/dashboard/myfriends')" :class="[isCollapsed ? 'sidebar-icon' : 'sidebar-icon-not-collapsed', 'group relative flex items-center', 'transition-all duration-300 ease-in-out']">
       <UserCircleIcon :class="['h-6 w-6', !isCollapsed ? 'mr-3':'']" />
       <h1 v-if="!isCollapsed" class="text-white transition-opacity duration-300 ease-in-out opacity-100">
       My Friends
@@ -55,7 +55,7 @@
 
 
 
-    <div :class="[isCollapsed ? 'sidebar-icon' : 'sidebar-icon-not-collapsed', 'group relative flex items-center', 'transition-all duration-300 ease-in-out']">
+    <div @click="this.$router.push('/dashboard/create-taskblock')" :class="[isCollapsed ? 'sidebar-icon' : 'sidebar-icon-not-collapsed', 'group relative flex items-center', 'transition-all duration-300 ease-in-out']">
       <PlusSmIcon :class="['h-6 w-6', !isCollapsed ? 'mr-3':'']" />
       <h1 v-if="!isCollapsed" class="text-white transition-opacity duration-300 ease-in-out opacity-100">
       Create TaskBlock
@@ -67,7 +67,7 @@
     </div>
 
 
-     <div :class="[isCollapsed ? 'sidebar-icon' : 'sidebar-icon-not-collapsed', 'group relative flex items-center', 'transition-all duration-300 ease-in-out']">
+     <div @click="this.$router.push('/dashboard/add-friends')" :class="[isCollapsed ? 'sidebar-icon' : 'sidebar-icon-not-collapsed', 'group relative flex items-center', 'transition-all duration-300 ease-in-out']">
       <UserAddIcon :class="['h-6 w-6', !isCollapsed ? 'mr-3':'']" />
       <h1 v-if="!isCollapsed" class="text-white transition-opacity duration-300 ease-in-out opacity-100">
       Add Friends
@@ -79,7 +79,7 @@
     </div>
 
 
-      <div :class="[isCollapsed ? 'sidebar-icon' : 'sidebar-icon-not-collapsed', 'group relative flex items-center', 'transition-all duration-300 ease-in-out']">
+      <div @click="this.$router.push('/dashboard/invitations')" :class="[isCollapsed ? 'sidebar-icon' : 'sidebar-icon-not-collapsed', 'group relative flex items-center', 'transition-all duration-300 ease-in-out']">
       <InboxIcon :class="['h-6 w-6', !isCollapsed ? 'mr-3':'']" />
       <h1 v-if="!isCollapsed" class="text-white transition-opacity duration-300 ease-in-out opacity-100">
       Invitations
@@ -117,6 +117,8 @@
 
 <script>
 import {InboxIcon, UserAddIcon, UserCircleIcon, ArrowLeftIcon, ArrowRightIcon, LogoutIcon ,CubeIcon, CalendarIcon,PlusSmIcon} from '@heroicons/vue/solid';
+import { mapActions } from 'vuex';
+
 
 export default {
   name: 'Sidebar',
@@ -137,11 +139,9 @@ export default {
     };
   },
   methods: {
+    ...mapActions('auth', ['logout']),
     toggleCollapse() {
       this.isCollapsed = !this.isCollapsed;
-    },
-    logout() {
-      console.log('Logging out...');
     }
   }
 };

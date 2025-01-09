@@ -2,6 +2,8 @@ package com.example.taskblock.model.wallet;
 
 import com.example.taskblock.model.taskblock.TaskBlock;
 import com.example.taskblock.model.user.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,7 +26,21 @@ public class Wallet {
 
     @ManyToOne
     @JoinColumn(name = "taskblock_id", nullable = false)
+    @JsonIgnore
     private TaskBlock taskBlock;
+
+    @JsonProperty("taskBlock")
+    public Long gettaskBlockJson() {
+        return taskBlock.getId();
+    }
+
+
+
+
+
+
+
+
 
     public BigDecimal getBalance() {
         return balance;

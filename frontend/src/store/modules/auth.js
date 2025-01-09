@@ -1,4 +1,8 @@
 import axios from '../../plugins/axios';
+import Toastify from 'toastify-js';
+import 'toastify-js/src/toastify.css';
+import router from '@/router';
+
 
 const state = {
   token: localStorage.getItem('token') || '',
@@ -23,14 +27,31 @@ const actions = {
       commit('setToken', token);
 
 
-      
-      const userresponse = await axios.get("/api/users/email/"+credentials.email);
+
+      const userresponse = await axios.get("/api/members/email/"+credentials.email);
       localStorage.setItem('user', JSON.stringify(userresponse.data));
       commit('setUser', userresponse.data);
-      console.log(userresponse.data)
-      return 1;
+        router.push("/dashboard")
+      Toastify({
+        text: "Welcome Again !",
+        duration: 3000,
+        close: true,
+        gravity: "bottom", // `top` or `bottom`
+        position: "right", // `left`, `center` or `right`
+        backgroundColor: "green",
+      }).showToast();
+
     } catch (error) {
-      return 0;
+
+        Toastify({
+            text: "Wrong Credentials !",
+            duration: 3000,
+            close: true,
+            gravity: "bottom", // `top` or `bottom`
+            position: "right", // `left`, `center` or `right`
+            backgroundColor: "red",
+          }).showToast();
+
     }
   },
   async register({ commit }, userData) {
@@ -40,16 +61,44 @@ const actions = {
           'Content-Type': 'application/json', // Explicitly setting the content type to JSON
         }});
       // Handle registration success (e.g., auto-login or redirect)
-      return true;
+
+      router.push("/login")
+      Toastify({
+        text: "Successful Sign Up",
+        duration: 3000,
+        close: true,
+        gravity: "bottom", // `top` or `bottom`
+        position: "right", // `left`, `center` or `right`
+        backgroundColor: "green",
+      }).showToast();
+
     } catch (error) {
-      return "the handle or the email is already used";
+        Toastify({
+          text: "Handle or Email aleary in use",
+          duration: 3000,
+          close: true,
+          gravity: "bottom", // `top` or `bottom`
+          position: "right", // `left`, `center` or `right`
+          backgroundColor: "red",
+        }).showToast();
     }
   },
   logout({ commit }) {
+    console.log("help me ")
     commit('clearAuth');
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     delete axios.defaults.headers.common['Authorization'];
+    router.push("/")
+    Toastify({
+        text: "See you next time !",
+        duration: 3000,
+        close: true,
+        gravity: "bottom", // `top` or `bottom`
+        position: "right", // `left`, `center` or `right`
+        backgroundColor: "green",
+      }).showToast();
+
   }
 };
 

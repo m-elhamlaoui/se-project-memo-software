@@ -12,5 +12,5 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     // Find a Member by Membername (optional for additional functionality)
     Optional<Member> findByHandle(String handle);
     Optional<Member> findById(Long id);
-
+    
 }

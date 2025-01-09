@@ -26,7 +26,9 @@ public class MemberService {
     public Optional<Member> getMemberByEmail(String email) {
         return memberRepository.findByEmail(email);
     }
-
+    public List<Member> getAllMembers() {
+        return memberRepository.findAll();
+    }
     public Optional<Member> getMemberByHandle(String handle) {
         return memberRepository.findByHandle(handle);
     }

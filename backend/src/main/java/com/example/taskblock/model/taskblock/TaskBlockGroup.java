@@ -1,11 +1,16 @@
 package com.example.taskblock.model.taskblock;
 
 import com.example.taskblock.model.user.Member;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.Id;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "taskblock_groups")
@@ -20,7 +25,13 @@ public class TaskBlockGroup {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "taskblock_id", nullable = false)
+    @JsonIgnore
     private TaskBlock taskBlock;
+
+    @JsonProperty("taskBlock")
+    public Long gettaskBlockJson() {
+        return taskBlock.getId();
+    }
 
     @ManyToMany
     @JoinTable(
@@ -29,7 +40,20 @@ public class TaskBlockGroup {
             inverseJoinColumns = @JoinColumn(name = "member_id")
     )
     @OrderColumn(name = "member_order")  // This maintains the list order
+    @JsonIgnore
     private List<Member> members = new ArrayList<>();
+
+    @JsonProperty("members")
+    public List<Map<String, Object>> getMembersJson() {
+        return members.stream()
+                .map(inviter -> {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("id", inviter.getId());
+                    map.put("handle", inviter.getHandle());
+                    return map;
+                })
+                .collect(Collectors.toList());
+    }
 
     public void setId(Long id) {
         this.id = id;

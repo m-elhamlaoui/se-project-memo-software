@@ -20,18 +20,29 @@ instance.interceptors.request.use(
 );
 
 instance.interceptors.response.use(
-    (response) => response, // Pass through successful responses
-    async (error) => {
-      if (error.response?.status === 401) {
+  (response) => response,
+  async (error) => {
+    if (error.response?.status === 401) {
+      // Check if this is a login attempt
+      if (error.config.url.includes('/login')) {
+        // Handle incorrect credentials during login
+        Toastify({
+          text: "Invalid email or password",
+          duration: 3000,
+          close: true,
+          gravity: "bottom",
+          position: "right",
+          backgroundColor: "red",
+        }).showToast();
+      } else {
+        // Handle expired token/unauthorized for other requests
         console.error('Token expired or unauthorized. Logging out...');
-        // Dispatch the Vuex logout action
-        store.dispatch('auth/logout');
-  
-        // Optionally redirect the user to the login page
-        window.location.href = '/login'; // Replace with your login route
+        await store.dispatch('auth/logout');
+        window.location.href = '/login';
       }
-      return Promise.reject(error); // Pass the error to the caller
     }
-  );
+    return Promise.reject(error);
+  }
+);
 
 export default instance;

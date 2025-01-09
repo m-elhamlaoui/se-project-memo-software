@@ -115,6 +115,7 @@ import {
   UsersIcon,
   UserXIcon 
 } from '@heroicons/vue/outline'
+import { mapActions ,mapState} from 'vuex';
 
 export default {
   components: {
@@ -124,6 +125,7 @@ export default {
     UsersIcon,
     UserXIcon
   },
+  
 
   data() {
     return {
@@ -135,6 +137,7 @@ export default {
         "CoolCoder123",
         "VueMaster",
       ],
+      data:null,
       users: [
         { username: "JohnDoe" },
         { username: "JaneSmith" },
@@ -156,12 +159,21 @@ export default {
         return []
       }
       return this.users.filter(user =>
-        user.username.toLowerCase().includes(this.searchQuery.toLowerCase())
+        user.username.toLowerCase().includes(this.searchQuery.toLowerCase() )&& user.username!=this.$store.state.auth.user.handle
       )
     }
   },
+  async mounted(){  
+    const rawUsers = await this.getUsers()
+    this.data=rawUsers
+    this.users = rawUsers.map(user => ({
+        username: user.handle
+    }))
+    },
 
   methods: {
+    ...mapActions('member', ['getUsers','invite']),
+
     handleFocus() {
       // Add any focus handling if needed
     },
@@ -171,10 +183,10 @@ export default {
     },
 
     async sendInvite(username) {
-      this.isLoading = true
-      await new Promise(resolve => setTimeout(resolve, 500))
-      alert(`Friend request sent to ${username}!`)
-      this.isLoading = false
+      const id2 = this.data.find(user => user.handle === username).id;
+      const id1 = this.$store.state.auth.user.id;
+      console.log("id's",id1,id2)
+      this.invite({id1,id2});
     }
   },
 

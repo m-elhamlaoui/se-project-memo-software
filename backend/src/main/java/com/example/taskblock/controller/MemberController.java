@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -37,6 +39,28 @@ public class MemberController {
         Optional<Member> member = memberService.getMemberByHandle(handle);
         return member.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Member>> getAllMembers() {
+        List<Member> members = memberService.getAllMembers();
+        return ResponseEntity.ok(members);
+    }
+
+    @PostMapping("/invite")
+    public ResponseEntity<?> sendFriendInvitation(
+            @RequestParam Long inviterId,
+            @RequestParam Long inviteeId) {
+        try {
+            memberService.inviteFriend(inviterId, inviteeId);
+            return ResponseEntity.ok().body(Map.of("message", "Invitation sent successfully"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError()
+                    .body(Map.of("error", "An unexpected error occurred"));
+        }
     }
 
     @DeleteMapping("/{id}")

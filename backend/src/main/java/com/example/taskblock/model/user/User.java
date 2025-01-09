@@ -1,13 +1,14 @@
 package com.example.taskblock.model.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,7 +25,24 @@ public abstract class User implements UserDetails {
             joinColumns = @JoinColumn(name = "member_id"),
             inverseJoinColumns = @JoinColumn(name = "friend_id")
     )
+    @JsonIgnore
     private List<Member> friends = new ArrayList<>();
+
+
+    @JsonProperty("friends")
+    public List<Map<String, Object>> getFriendsJson() {
+        return friends.stream()
+                .map(inviter -> {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("id", inviter.getId());
+                    map.put("handle", inviter.getHandle());
+                    return map;
+                })
+                .collect(Collectors.toList());
+    }
+
+
+
 
     @ManyToMany
     @JoinTable(
@@ -32,7 +50,20 @@ public abstract class User implements UserDetails {
             joinColumns = @JoinColumn(name = "invited_id"),
             inverseJoinColumns = @JoinColumn(name = "inviter_id")
     )
+    @JsonIgnore
     private List<Member> inviters = new ArrayList<>();
+
+    @JsonProperty("inviters")
+    public List<Map<String, Object>> getInvitersJson() {
+        return inviters.stream()
+                .map(inviter -> {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("id", inviter.getId());
+                    map.put("handle", inviter.getHandle());
+                    return map;
+                })
+                .collect(Collectors.toList());
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
