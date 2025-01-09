@@ -45,11 +45,11 @@ public class Notification {
     }
 
     public boolean isRead() {
-        return read;
+        return isRead;
     }
 
-    public void setRead(boolean read) {
-        this.read = read;
+    public void setRead(boolean isread) {
+        this.isRead = isread;
     }
 
     public Task getTask() {
@@ -84,13 +84,11 @@ public class Notification {
 
     private LocalDateTime createdAt;
 
-    private boolean read;
+    private boolean isRead;
 
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
-        read = false;
+        isRead = false;
     }
-
-
 }

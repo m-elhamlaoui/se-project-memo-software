@@ -94,7 +94,7 @@ public class NotificationService implements TaskObserver {
     }
 
     public List<Notification> getUnreadNotifications(User user) {
-        return notificationRepository.findByRecipientAndReadFalseOrderByCreatedAtDesc(user);
+        return notificationRepository.findByRecipientAndIsReadFalseOrderByCreatedAtDesc(user);
     }
 
     // Methods for managing notifications
@@ -108,7 +108,7 @@ public class NotificationService implements TaskObserver {
 
     public void markAllAsRead(User user) {
         List<Notification> unreadNotifications =
-                notificationRepository.findByRecipientAndReadFalseOrderByCreatedAtDesc(user);
+                notificationRepository.findByRecipientAndIsReadFalseOrderByCreatedAtDesc(user);
 
         unreadNotifications.forEach(notification -> notification.setRead(true));
         notificationRepository.saveAll(unreadNotifications);
