@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -30,8 +32,11 @@ public class Wallet {
     private TaskBlock taskBlock;
 
     @JsonProperty("taskBlock")
-    public Long gettaskBlockJson() {
-        return taskBlock.getId();
+    public Map<String, Object> getTaskBlockJson() {
+        Map<String, Object> taskBlockJson = new HashMap<>();
+        taskBlockJson.put("id", taskBlock.getId());
+        taskBlockJson.put("name", taskBlock.getName());
+        return taskBlockJson;
     }
 
 
@@ -75,7 +80,7 @@ public class Wallet {
     }
 
     @Column(nullable = false)
-    private BigDecimal balance;
+    private BigDecimal balance = new BigDecimal(0); 
 
     // Constructors
     public Wallet() {}

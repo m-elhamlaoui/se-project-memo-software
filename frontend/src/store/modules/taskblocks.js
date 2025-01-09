@@ -32,8 +32,30 @@ const actions = {
           return []
 
     }
-  }
-  
+  },
+  async getTaskblocks({commit},data){
+    try {
+      const response = await axios.get('/api/wallets/user/' + data+ '/taskblocks', data,{
+        headers: {
+          'Content-Type': 'application/json', // Explicitly setting the content type to JSON
+        }});
+        
+        return response.data
+      
+    } catch (error) {
+
+        Toastify({
+            text: "Something Went Wrong, Try reloading the Page",
+            duration: 3000,
+            close: true,
+            gravity: "bottom", // `top` or `bottom`
+            position: "right", // `left`, `center` or `right`
+            backgroundColor: "orange",
+          }).showToast();
+        return []
+
+    }
+  },
 };
 
 

@@ -1,6 +1,6 @@
 package com.example.taskblock.controller;
 
-import com.example.taskblock.model.taskblock.TaskBlock;
+import com.example.taskblock.model.wallet.Wallet;
 import com.example.taskblock.service.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,10 +22,10 @@ public class WalletController {
     }
 
     @GetMapping("/user/{userId}/taskblocks")
-    public ResponseEntity<List<TaskBlock>> getUserTaskBlocks(@PathVariable Long userId) {
+    public ResponseEntity<List<Wallet>> getUserTaskBlocks(@PathVariable Long userId) {
         try {
-            List<TaskBlock> taskBlocks = walletService.getTaskBlocksByUserId(userId);
-            return ResponseEntity.ok(taskBlocks);
+            List<Wallet> wallets = walletService.getTaskBlocksByUserId(userId);
+            return ResponseEntity.ok(wallets);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
         }

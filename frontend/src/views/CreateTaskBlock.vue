@@ -132,6 +132,7 @@
         id="number-input"
         type="number"
         v-model="numberValue"
+        required
         @input="validateNumberInput"
         placeholder="Enter a number"
         class="border rounded-md p-2 w-full"
@@ -220,8 +221,13 @@ export default {
       taskDeadline: '',
       selectedAssignees: [],
       selectedSubgroup: [],
-      availableMembers: ['Alice', 'Bob', 'Charlie'], // Example member list
     };
+  },
+  computed: {
+    availableMembers() {
+      if (this.$store.state.auth.user) return this.$store.state.auth.user.friends.map(user => (user.handle))
+    return []
+    }
   },
   methods: {
     calculateTotalSeconds() {
@@ -292,9 +298,9 @@ export default {
       members:this.selectedAssignees,
       groups: this.subgroups.map(subgroup => ({
         name: subgroup.name,
-        members: subgroup.members.map(member => ({
-          handle: member // Assuming member is the handle/username
-        }))
+        members: subgroup.members.map(member => (
+        member // Assuming member is the handle/username
+        ))
       }))
     }
       )

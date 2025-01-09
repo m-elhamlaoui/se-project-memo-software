@@ -39,12 +39,9 @@ public class WalletService {
         walletRepository.save(wallet);
     }
 
-    public List<TaskBlock> getTaskBlocksByUserId(Long userId) {
+    public List<Wallet> getTaskBlocksByUserId(Long userId) {
         List<Wallet> userWallets = walletRepository.findByUserIdWithTaskBlocks(userId);
-        return userWallets.stream()
-                .map(Wallet::getTaskBlock)
-                .distinct()  // Remove duplicates if any
-                .collect(Collectors.toList());
+        return userWallets;
     }
 
 }

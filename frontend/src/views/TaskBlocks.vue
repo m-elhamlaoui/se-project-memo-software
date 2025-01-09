@@ -4,7 +4,10 @@
       <div class="text-title" ref="welcomeText"></div>
     </div>
       <div class=" taskblock-container rounded-xl">
-       <taskblockEmpty/>
+       <taskblockEmpty v-if="wallets.length === 0"/>
+
+       <taskblockCard :key="index"
+        v-for="index,wallet in wallets" :title="wallet.name" />
        
       </div>
   </div>
@@ -13,15 +16,18 @@
 <script>
 import taskblockCard from '@/components/taskblocks/taskblockCard.vue'
 import taskblockEmpty from '@/components/taskblocks/taskblockEmpty.vue'
+import { mapActions ,mapState} from 'vuex';
+
 
 export default {
   components: { taskblockCard ,taskblockEmpty},
   data(){
     return({
-        handle:'Oussama'
+        handle: this.$store.state.auth.user.handle,
+        wallets:[]
     })
   },
-  mounted() {
+  async mounted() {
 
     
     const message = `Welcome, ${this.handle}!`;
@@ -38,7 +44,13 @@ export default {
     };
 
     typeWriter();
+
+    const temp = await this.getTaskblocks(this.$store.state.auth.user.id)
+    this.wallets = temp
   },
+  methods:{
+    ...mapActions('taskblocks', ['getTaskblocks']),
+  }
 }
 </script>
 

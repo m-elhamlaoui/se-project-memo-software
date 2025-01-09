@@ -9,8 +9,7 @@
             </span>
             <div
                 class="space-y-6 pt-5 text-base leading-7 text-gray-600 transition-all duration-300 group-hover:text-white/90">
-                <p class="text-container">Perfect for learning how the framework works, prototyping a new idea, or creating a demo to share
-                    onlinewefiwfoiwnf wefoiweomfwe fwoifowmef wefoiweomfw efowmfoiwmef weoifmwoeif wefoiwmefw efoiwmefoimwef weoifmowimef woeimfowiemf weofmweofimwef woefwoemfowmef.</p>
+                <p class="text-container">title</p>
             </div>
             <div class="pt-5 text-base font-semibold leading-7">
                 <p>
@@ -26,9 +25,10 @@
 
 <script>
 import { CubeIcon } from '@heroicons/vue/solid'
-export default {
-    components :{CubeIcon}
 
+export default {
+    components :{CubeIcon},
+    props:['title']
 }
 </script>
 

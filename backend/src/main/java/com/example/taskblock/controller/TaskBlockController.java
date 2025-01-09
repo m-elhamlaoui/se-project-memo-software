@@ -5,6 +5,8 @@ import com.example.taskblock.dto.TaskBlockDto;
 import com.example.taskblock.model.taskblock.TaskBlock;
 import com.example.taskblock.model.taskblock.TaskBlockGroup;
 import com.example.taskblock.model.user.Member;
+import com.example.taskblock.model.wallet.Wallet;
+import com.example.taskblock.service.TaskBlockGroupService;
 import com.example.taskblock.service.TaskBlockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +20,12 @@ import java.util.List;
 public class TaskBlockController {
 
     private final TaskBlockService taskBlockService;
+    private final TaskBlockGroupService taskBlockGroupService;
 
     @Autowired
-    public TaskBlockController(TaskBlockService taskBlockService) {
+    public TaskBlockController(TaskBlockService taskBlockService,TaskBlockGroupService taskBlockGroupService) {
         this.taskBlockService = taskBlockService;
+        this.taskBlockGroupService =  taskBlockGroupService;
     }
 
     /**
@@ -31,66 +35,23 @@ public class TaskBlockController {
     public ResponseEntity<TaskBlock> createTaskBlock(
             @AuthenticationPrincipal Member creator,
             @RequestBody TaskBlockDto taskBlock) {
-        TaskBlock createdTaskBlock = taskBlockService.createTaskBlock(creator, taskBlock);
+        TaskBlock createdTaskBlock = taskBlockService.createTaskBlock(taskBlock,creator);
         return ResponseEntity.ok(createdTaskBlock);
     }
 
-    /**
-     * Get all TaskBlocks for the current user
-     */
-    @GetMapping
-    public ResponseEntity<List<TaskBlock>> getUserTaskBlocks(
-            @AuthenticationPrincipal Member currentUser) {
-        List<TaskBlock> taskBlocks = taskBlockService.getUserTaskBlocks(currentUser);
-        return ResponseEntity.ok(taskBlocks);
-    }
-
+   
     /**
      * Get a specific TaskBlock by ID
      */
     @GetMapping("/{taskBlockId}")
-    public ResponseEntity<TaskBlock> getTaskBlock(
+    public ResponseEntity<?> getTaskBlock(
             @AuthenticationPrincipal Member currentUser,
             @PathVariable Long taskBlockId) {
-        TaskBlock taskBlock = taskBlockService.getTaskBlockById(currentUser, taskBlockId);
+        TaskBlock taskBlock = taskBlockService.getTaskBlockById(taskBlockId).orElse(null);
+        if (taskBlock != null)
         return ResponseEntity.ok(taskBlock);
-    }
-
-    /**
-     * Update an existing TaskBlock
-     */
-    @PutMapping("/{taskBlockId}")
-    public ResponseEntity<TaskBlock> updateTaskBlock(
-            @AuthenticationPrincipal Member currentUser,
-            @PathVariable Long taskBlockId,
-            @RequestBody TaskBlock taskBlockDetails) {
-        TaskBlock updatedTaskBlock = taskBlockService.updateTaskBlock(currentUser, taskBlockId, taskBlockDetails);
-        return ResponseEntity.ok(updatedTaskBlock);
-    }
-
-    /**
-     * Delete a TaskBlock
-     */
-    @DeleteMapping("/{taskBlockId}")
-    public ResponseEntity<Void> deleteTaskBlock(
-            @AuthenticationPrincipal Member currentUser,
-            @PathVariable Long taskBlockId) {
-        taskBlockService.deleteTaskBlock(currentUser, taskBlockId);
-        return ResponseEntity.noContent().build();
-    }
-
-    /**
-     * Create a TaskBlock Group
-     */
-    @PostMapping("/{taskBlockId}/groups/create")
-    public ResponseEntity<TaskBlockGroup> createTaskBlockGroup(
-            @AuthenticationPrincipal Member currentUser,
-            @PathVariable Long taskBlockId,
-            @RequestBody TaskBlockGroup taskBlockGroup) {
-        TaskBlockGroup createdGroup = taskBlockService.createTaskBlockGroup(currentUser, taskBlockId, taskBlockGroup);
-        return ResponseEntity.ok(createdGroup);
-    }
-
+        else return ResponseEntity.badRequest().body("not found");
+    }  
     /**
      * Get all Groups for a TaskBlock
      */
@@ -98,25 +59,28 @@ public class TaskBlockController {
     public ResponseEntity<List<TaskBlockGroup>> getTaskBlockGroups(
             @AuthenticationPrincipal Member currentUser,
             @PathVariable Long taskBlockId) {
-        List<TaskBlockGroup> groups = taskBlockService.getTaskBlockGroups(currentUser, taskBlockId);
+        List<TaskBlockGroup> groups = taskBlockGroupService.getGroupsInTaskBlock(taskBlockId);
         return ResponseEntity.ok(groups);
     }
 
     /**
      * Add a member to a TaskBlock Group
      */
-    @PostMapping("/groups/{groupId}/add-member")
-    public ResponseEntity<TaskBlockGroup> addMemberToGroup(
+    @PostMapping("/{taskBlockId}/create-wallet")
+    public ResponseEntity< List<Wallet>> createWallet(
             @AuthenticationPrincipal Member currentUser,
-            @PathVariable Long groupId,
-            @RequestParam Long memberId) {
-        TaskBlockGroup updatedGroup = taskBlockService.addMemberToGroup(currentUser, groupId, memberId);
-        return ResponseEntity.ok(updatedGroup);
+            @PathVariable Long taskBlockId,
+            @RequestBody List<String> memberHandle) {
+        List<Wallet> createdWallet = taskBlockService.createWalletForMember(
+            taskBlockId, memberHandle
+        );
+        return ResponseEntity.ok(createdWallet);
     }
 
     /**
      * Remove a member from a TaskBlock Group
      */
+    /* 
     @PostMapping("/groups/{groupId}/remove-member")
     public ResponseEntity<TaskBlockGroup> removeMemberFromGroup(
             @AuthenticationPrincipal Member currentUser,
@@ -125,4 +89,5 @@ public class TaskBlockController {
         TaskBlockGroup updatedGroup = taskBlockService.removeMemberFromGroup(currentUser, groupId, memberId);
         return ResponseEntity.ok(updatedGroup);
     }
+    */
 }

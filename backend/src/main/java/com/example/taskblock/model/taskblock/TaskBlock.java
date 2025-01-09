@@ -35,17 +35,17 @@ public class TaskBlock {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    @OneToMany(mappedBy = "taskBlock", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "taskBlock", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
     private List<Task> tasks = new ArrayList<>(); // Initialize as empty list to avoid null issues
 
-    @OneToMany(mappedBy = "taskBlock", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "taskBlock", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
     private List<Wallet> wallets = new ArrayList<>(); // Initialize as empty list to avoid null issues
 
     @Column(nullable = false)
     private double percentageToAccept = 0.0; // Default percentage (can be overridden later)
 
     @Column(nullable = false)
-    private long voteDurationInMinutes = 0; // Default duration (can be overridden later)
+    private long voteDurationInSeconds = 0; // Default duration (can be overridden later)
 
     @Transient
     private TimeRejectionStrategy timeRejectionStrategy = null; // Default to null, set dynamically if needed
@@ -134,12 +134,12 @@ public class TaskBlock {
         this.timeRejectionStrategy = timeRejectionStrategy;
     }
 
-    public long getVoteDurationInMinutes() {
-        return voteDurationInMinutes;
+    public long getVoteDurationInSeconds() {
+        return voteDurationInSeconds;
     }
 
-    public void setVoteDurationInMinutes(long voteDurationInMinutes) {
-        this.voteDurationInMinutes = voteDurationInMinutes;
+    public void setVoteDurationInSeconds(long voteDurationInSeconds) {
+        this.voteDurationInSeconds = voteDurationInSeconds;
     }
 
     public VoteRepository getVoteRepository() {
