@@ -3,14 +3,12 @@ package com.example.taskblock.service;
 import com.example.taskblock.model.task.Task;
 import com.example.taskblock.model.taskblock.TaskBlockGroup;
 import com.example.taskblock.model.user.Member;
-import com.example.taskblock.repository.MemberRepository;
 import com.example.taskblock.repository.TaskBlockGroupRepository;
 import com.example.taskblock.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

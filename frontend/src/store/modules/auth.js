@@ -2,11 +2,13 @@ import axios from '../../plugins/axios';
 import Toastify from 'toastify-js';
 import 'toastify-js/src/toastify.css';
 import router from '@/router';
+import WebSocketService from '@/services/WebSocketService'
 
 
 const state = {
   token: localStorage.getItem('token') || '',
-  user: JSON.parse(localStorage.getItem('user')) || {}
+  user: JSON.parse(localStorage.getItem('user')) || {},
+  userSubscription:null
 };
 
 const getters = {
@@ -15,7 +17,7 @@ const getters = {
 };
 
 const actions = {
-  async login({ commit }, credentials) {
+  async login({ commit ,dispatch}, credentials) {
     try {
       const response = await axios.post('/auth/login', credentials,{
         headers: {
@@ -25,12 +27,11 @@ const actions = {
       localStorage.setItem('token', token);
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       commit('setToken', token);
-
-
-
       const userresponse = await axios.get("/api/members/email/"+credentials.email);
       localStorage.setItem('user', JSON.stringify(userresponse.data));
       commit('setUser', userresponse.data);
+
+      await dispatch('setupUserSocket');
         router.push("/dashboard")
       Toastify({
         text: "Welcome Again !",
@@ -44,7 +45,7 @@ const actions = {
     } catch (error) {
 
         Toastify({
-            text: "Wrong Credentials !",
+            text: "Wrong Crendentials !",
             duration: 3000,
             close: true,
             gravity: "bottom", // `top` or `bottom`
@@ -84,10 +85,11 @@ const actions = {
     }
   },
   logout({ commit }) {
-    console.log("help me ")
     commit('clearAuth');
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    WebSocketService.disconnect();
+    commit('setUserSubscription', null);
     delete axios.defaults.headers.common['Authorization'];
     router.push("/")
     Toastify({
@@ -98,7 +100,24 @@ const actions = {
         position: "right", // `left`, `center` or `right`
         backgroundColor: "green",
       }).showToast();
-
+  },
+  async setupUserSocket({ commit, state }) {
+    // Disconnect any existing subscription
+    if (state.userSubscription) {
+      state.userSubscription.unsubscribe();
+    }
+    // Setup new user update subscription
+    const subscription = WebSocketService.subscribe(
+      `/update/user/${state.user.email}`, 
+      (updatedUser) => {
+        console.log("update received");
+        
+        // Handle user update
+        commit('setUser', updatedUser);
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+      }
+    );
+    commit('setUserSubscription', subscription);
   }
 };
 
@@ -112,6 +131,9 @@ const mutations = {
   clearAuth(state) {
     state.token = '';
     state.user = {};
+  },
+  setUserSubscription(state, subscription) {
+    state.userSubscription = subscription;
   }
 };
 

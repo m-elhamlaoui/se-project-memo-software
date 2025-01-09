@@ -61,8 +61,95 @@ const actions = {
 
     }
   },
+  async accept({commit},data){
+    try {
+      const response = await axios.post('/api/friends/invite/'+data.id, {},{
+        headers: {
+          'Content-Type': 'application/json', // Explicitly setting the content type to JSON
+        }});
+        Toastify({
+            text: "Invitation accepted",
+            duration: 3000,
+            close: true,
+            gravity: "bottom", // `top` or `bottom`
+            position: "right", // `left`, `center` or `right`
+            backgroundColor: "green",
+          }).showToast();
 
+    } catch (error) {
 
+        Toastify({
+            text: "Something Went Wrong",
+            duration: 3000,
+            close: true,
+            gravity: "bottom", // `top` or `bottom`
+            position: "right", // `left`, `center` or `right`
+            backgroundColor: "orange",
+          }).showToast();
+          return []
+
+    }
+
+  },
+  async reject({commit},data){
+    try {
+      const response = await axios.post('/api/friends/reject/'+data.id, {},{
+        headers: {
+          'Content-Type': 'application/json', // Explicitly setting the content type to JSON
+        }});
+        Toastify({
+            text: "Invitation rejected",
+            duration: 3000,
+            close: true,
+            gravity: "bottom", // `top` or `bottom`
+            position: "right", // `left`, `center` or `right`
+            backgroundColor: "green",
+          }).showToast();
+
+    } catch (error) {
+
+        Toastify({
+            text: "Something Went Wrong",
+            duration: 3000,
+            close: true,
+            gravity: "bottom", // `top` or `bottom`
+            position: "right", // `left`, `center` or `right`
+            backgroundColor: "orange",
+          }).showToast();
+          return []
+
+    }
+
+  },
+  async remove({commit},data){
+    try {
+      const response = await axios.post('/api/friends/remove/'+data.id, {},{
+        headers: {
+          'Content-Type': 'application/json', // Explicitly setting the content type to JSON
+        }});
+        Toastify({
+            text: "Friend Removed",
+            duration: 3000,
+            close: true,
+            gravity: "bottom", // `top` or `bottom`
+            position: "right", // `left`, `center` or `right`
+            backgroundColor: "green",
+          }).showToast();
+
+    } catch (error) {
+
+        Toastify({
+            text: "Something Went Wrong",
+            duration: 3000,
+            close: true,
+            gravity: "bottom", // `top` or `bottom`
+            position: "right", // `left`, `center` or `right`
+            backgroundColor: "orange",
+          }).showToast();
+          return []
+
+    }
+  }
   
 };
 

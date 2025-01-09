@@ -14,9 +14,12 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
+    private final WebSocketNotificationService webSocketNotificationService;
+
     @Autowired
-    public MemberService(MemberRepository memberRepository) {
+    public MemberService(MemberRepository memberRepository,WebSocketNotificationService webSocketNotificationService) {
         this.memberRepository = memberRepository;
+        this.webSocketNotificationService = webSocketNotificationService;
     }
 
     public Member createMember(Member member) {
@@ -61,6 +64,8 @@ public class MemberService {
         // If all checks pass, create the invitation
         invitee.getInviters().add(inviter);
         memberRepository.save(invitee);
+        webSocketNotificationService.sendUpdate(invitee, "/update/user/"+invitee.getEmail());
+
     }
 
     @Transactional
@@ -79,8 +84,13 @@ public class MemberService {
         accepter.getFriends().add(inviter);
         inviter.getFriends().add(accepter);
 
+
+
         memberRepository.save(accepter);
         memberRepository.save(inviter);
+        webSocketNotificationService.sendUpdate(accepter, "/update/user/"+accepter.getEmail());
+        webSocketNotificationService.sendUpdate(inviter, "/update/user/"+inviter.getEmail());
+
     }
 
     public void rejectInvitation(Long invitedId, Long inviterId) {
@@ -94,7 +104,10 @@ public class MemberService {
             throw new RuntimeException("No invitation found");
         }
 
+
         memberRepository.save(invited);
+        webSocketNotificationService.sendUpdate(invited, "/update/user/"+invited.getEmail());
+        
     }
 
     public List<Member> getFriends(Long memberId) {
@@ -109,4 +122,27 @@ public class MemberService {
                 .orElseThrow(() -> new RuntimeException("Member not found"));
     }
 
+    @Transactional
+    public void removeFriend(Long currentUserId, Long friendId) {
+    // Find the current user
+    Member user = memberRepository.findById(currentUserId)
+        .orElseThrow(() -> new RuntimeException("User not found"));
+    
+    // Find the friend to remove
+    Member friendToRemove = memberRepository.findById(friendId)
+        .orElseThrow(() -> new RuntimeException("Friend not found"));
+    
+    // Remove friend from user's friend list
+    user.getFriends().removeIf(friend -> friend.getId().equals(friendId));
+    
+    // Remove user from friend's friend list (if bidirectional)
+    friendToRemove.getFriends().removeIf(friend -> friend.getId().equals(currentUserId));
+    
+    // Save both users
+    memberRepository.save(user);
+    memberRepository.save(friendToRemove);
+    webSocketNotificationService.sendUpdate(user, "/update/user/"+user.getEmail());
+    webSocketNotificationService.sendUpdate(friendToRemove, "/update/user/"+friendToRemove.getEmail());
+
+}
 }

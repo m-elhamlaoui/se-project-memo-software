@@ -39,7 +39,7 @@
             <!-- Actions -->
             <div class="flex items-center space-x-2">
               <button
-                @click="removeFriend(friend.username)"
+                @click="removeFriend(friend.id)"
                 class="inline-flex items-center px-3 py-2 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
               >
                 Remove
@@ -66,6 +66,7 @@
 
 <script>
 import { UserIcon } from '@heroicons/vue/outline'
+import { mapActions ,mapState} from 'vuex';
 
 export default {
   components: {
@@ -74,19 +75,22 @@ export default {
 
   data() {
     return {
-      friends: [
-        { username: "JohnDoe" },
-        { username: "JaneSmith" },
-        { username: "CoolCoder123" },
-        { username: "VueMaster" },
-      ],
     }
   },
-
+   computed: {
+    friends() {
+      if (this.$store.state.auth.user) return this.$store.state.auth.user.friends.map(user => ({
+        username: user.handle,id:user.id
+    }))
+    return []
+    }
+  },
   methods: {
-    removeFriend(username) {
-      // Implement remove friend logic here
-      console.log(`Removing friend: ${username}`)
+    ...mapActions('member', ['remove']),
+
+    async removeFriend(id) {
+      await this.remove({id})
+
     }
   },
 }

@@ -1,39 +1,50 @@
-C:\Users\Oussama Laaroussi\Desktop\CS__s5\java\Project\Java-Project\src\main\java\com\example\collaborativeplatform\CollaborativeplatformApplication.java
-C:\Users\Oussama Laaroussi\Desktop\CS__s5\java\Project\Java-Project\src\main\java\com\example\collaborativeplatform\config\ApplicationConfiguration.java
-C:\Users\Oussama Laaroussi\Desktop\CS__s5\java\Project\Java-Project\src\main\java\com\example\collaborativeplatform\config\JwtAuthenticationFilter.java
-C:\Users\Oussama Laaroussi\Desktop\CS__s5\java\Project\Java-Project\src\main\java\com\example\collaborativeplatform\config\SecurityConfiguration.java
-C:\Users\Oussama Laaroussi\Desktop\CS__s5\java\Project\Java-Project\src\main\java\com\example\collaborativeplatform\controller\AuthenticationController.java
-C:\Users\Oussama Laaroussi\Desktop\CS__s5\java\Project\Java-Project\src\main\java\com\example\collaborativeplatform\controller\ChatController.java
-C:\Users\Oussama Laaroussi\Desktop\CS__s5\java\Project\Java-Project\src\main\java\com\example\collaborativeplatform\controller\FileController.java
-C:\Users\Oussama Laaroussi\Desktop\CS__s5\java\Project\Java-Project\src\main\java\com\example\collaborativeplatform\controller\InvitationController.java
-C:\Users\Oussama Laaroussi\Desktop\CS__s5\java\Project\Java-Project\src\main\java\com\example\collaborativeplatform\controller\ProjectController.java
-C:\Users\Oussama Laaroussi\Desktop\CS__s5\java\Project\Java-Project\src\main\java\com\example\collaborativeplatform\controller\TaskController.java
-C:\Users\Oussama Laaroussi\Desktop\CS__s5\java\Project\Java-Project\src\main\java\com\example\collaborativeplatform\controller\UserController.java
-C:\Users\Oussama Laaroussi\Desktop\CS__s5\java\Project\Java-Project\src\main\java\com\example\collaborativeplatform\dto\LoginUserDto.java
-C:\Users\Oussama Laaroussi\Desktop\CS__s5\java\Project\Java-Project\src\main\java\com\example\collaborativeplatform\exceptions\GlobalExceptionHandler.java
-C:\Users\Oussama Laaroussi\Desktop\CS__s5\java\Project\Java-Project\src\main\java\com\example\collaborativeplatform\model\chat\ChatGroup.java
-C:\Users\Oussama Laaroussi\Desktop\CS__s5\java\Project\Java-Project\src\main\java\com\example\collaborativeplatform\model\chat\Message.java
-C:\Users\Oussama Laaroussi\Desktop\CS__s5\java\Project\Java-Project\src\main\java\com\example\collaborativeplatform\model\invitation\Invitation.java
-C:\Users\Oussama Laaroussi\Desktop\CS__s5\java\Project\Java-Project\src\main\java\com\example\collaborativeplatform\model\project\File.java
-C:\Users\Oussama Laaroussi\Desktop\CS__s5\java\Project\Java-Project\src\main\java\com\example\collaborativeplatform\model\project\Project.java
-C:\Users\Oussama Laaroussi\Desktop\CS__s5\java\Project\Java-Project\src\main\java\com\example\collaborativeplatform\model\project\Task.java
-C:\Users\Oussama Laaroussi\Desktop\CS__s5\java\Project\Java-Project\src\main\java\com\example\collaborativeplatform\model\project\TaskStatus.java
-C:\Users\Oussama Laaroussi\Desktop\CS__s5\java\Project\Java-Project\src\main\java\com\example\collaborativeplatform\model\user\Member.java
-C:\Users\Oussama Laaroussi\Desktop\CS__s5\java\Project\Java-Project\src\main\java\com\example\collaborativeplatform\model\user\User.java
-C:\Users\Oussama Laaroussi\Desktop\CS__s5\java\Project\Java-Project\src\main\java\com\example\collaborativeplatform\repository\ChatGroupRepository.java
-C:\Users\Oussama Laaroussi\Desktop\CS__s5\java\Project\Java-Project\src\main\java\com\example\collaborativeplatform\repository\FileRepository.java
-C:\Users\Oussama Laaroussi\Desktop\CS__s5\java\Project\Java-Project\src\main\java\com\example\collaborativeplatform\repository\InvitationRepository.java
-C:\Users\Oussama Laaroussi\Desktop\CS__s5\java\Project\Java-Project\src\main\java\com\example\collaborativeplatform\repository\MessageRepository.java
-C:\Users\Oussama Laaroussi\Desktop\CS__s5\java\Project\Java-Project\src\main\java\com\example\collaborativeplatform\repository\ProjectRepository.java
-C:\Users\Oussama Laaroussi\Desktop\CS__s5\java\Project\Java-Project\src\main\java\com\example\collaborativeplatform\repository\TaskRepository.java
-C:\Users\Oussama Laaroussi\Desktop\CS__s5\java\Project\Java-Project\src\main\java\com\example\collaborativeplatform\repository\UserRepository.java
-C:\Users\Oussama Laaroussi\Desktop\CS__s5\java\Project\Java-Project\src\main\java\com\example\collaborativeplatform\response\LoginResponse.java
-C:\Users\Oussama Laaroussi\Desktop\CS__s5\java\Project\Java-Project\src\main\java\com\example\collaborativeplatform\service\AuthenticationService.java
-C:\Users\Oussama Laaroussi\Desktop\CS__s5\java\Project\Java-Project\src\main\java\com\example\collaborativeplatform\service\ChatGroupService.java
-C:\Users\Oussama Laaroussi\Desktop\CS__s5\java\Project\Java-Project\src\main\java\com\example\collaborativeplatform\service\ChatService.java
-C:\Users\Oussama Laaroussi\Desktop\CS__s5\java\Project\Java-Project\src\main\java\com\example\collaborativeplatform\service\FileService.java
-C:\Users\Oussama Laaroussi\Desktop\CS__s5\java\Project\Java-Project\src\main\java\com\example\collaborativeplatform\service\InvitationService.java
-C:\Users\Oussama Laaroussi\Desktop\CS__s5\java\Project\Java-Project\src\main\java\com\example\collaborativeplatform\service\JwtService.java
-C:\Users\Oussama Laaroussi\Desktop\CS__s5\java\Project\Java-Project\src\main\java\com\example\collaborativeplatform\service\ProjectService.java
-C:\Users\Oussama Laaroussi\Desktop\CS__s5\java\Project\Java-Project\src\main\java\com\example\collaborativeplatform\service\TaskService.java
-C:\Users\Oussama Laaroussi\Desktop\CS__s5\java\Project\Java-Project\src\main\java\com\example\collaborativeplatform\service\UserService.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\config\ApplicationConfiguration.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\config\BlockchainConfig.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\config\GlobalCorsConfig.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\config\JwtAuthenticationFilter.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\config\SecurityConfiguration.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\config\WebConfig.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\config\WebSocketConfig.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\controller\AuthenticationController.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\controller\FriendController.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\controller\MemberController.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\controller\NotificationController.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\controller\TaskController.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\controller\WalletController.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\dto\LoginUserDto.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\exceptions\GlobalExceptionHandler.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\model\notification\Notification.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\model\notification\NotificationType.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\model\notification\TaskObserver.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\model\notification\TaskSubject.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\model\strategy\impl\FixedTimeRejectionStrategy.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\model\strategy\impl\FlexiblePercentageAcceptanceStrategy.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\model\strategy\PercentageAcceptanceStrategy.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\model\strategy\TimeRejectionStrategy.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\model\task\Task.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\model\task\TaskStatus.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\model\taskblock\TaskBlock.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\model\taskblock\TaskBlockGroup.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\model\user\Member.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\model\user\User.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\model\vote\Vote.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\model\wallet\Wallet.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\repository\MemberRepository.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\repository\NotificationRepository.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\repository\TaskBlockGroupRepository.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\repository\TaskBlockRepository.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\repository\TaskRepository.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\repository\VoteRepository.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\repository\WalletRepository.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\response\LoginResponse.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\service\AuthenticationService.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\service\BlockchainService.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\service\JwtService.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\service\MemberService.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\service\NotificationService.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\service\TaskBlockGroupService.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\service\TaskBlockService.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\service\TaskService.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\service\VoteService.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\service\WalletService.java
+C:\Users\Oussama Laaroussi\Desktop\CS__s5\software engineering\SoftwareProject\backend\src\main\java\com\example\taskblock\TaskBlock.java

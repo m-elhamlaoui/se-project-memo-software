@@ -15,9 +15,11 @@
     "bootstrap-vue-3": "^0.5.1",
     "core-js": "^3.8.3",
     "firebase": "^11.1.0",
+    "sockjs-client": "^1.6.1",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",
-    "vuex": "^4.0.0"
+    "vuex": "^4.0.0",
+    "webstomp-client": "^1.2.6"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",

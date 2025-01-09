@@ -1,6 +1,5 @@
 package com.example.taskblock;
 
-import com.example.taskblock.model.user.Member;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;

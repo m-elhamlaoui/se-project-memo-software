@@ -139,16 +139,6 @@ export default {
       ],
       data:null,
       users: [
-        { username: "JohnDoe" },
-        { username: "JaneSmith" },
-        { username: "CoolCoder123" },
-        { username: "VueMaster" },
-        { username: "NotYourFriend" },
-        { username: "FutureFriend" },
-        { username: "TestUser1" },
-        { username: "TestUser2" },
-        { username: "TestUser3" },
-        { username: "TestUser4" },
       ]
     }
   },

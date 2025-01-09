@@ -2,7 +2,7 @@
   <div class="discussion-wrapper">
     <!-- Return Link -->
     <div class="return-link">
-      <a href="/" class="text-green-500 hover:text-green-700 font-medium">
+      <a href="/dashboard/taskblocks" class="text-green-500 hover:text-green-700 font-medium">
         &larr; Back to Dashboard
       </a>
     </div>
@@ -11,10 +11,10 @@
     <div class="discussion-history">
 
         <!-- start righting here -->
-    <div class="input-bar">
+    <form @submit.prevent="addTaskBlock" class="input-bar">
     <!-- TaskBlock Title Input -->
     <h1>TaskBlock Title</h1>
-    <input v-model="taskTitle" placeholder="TaskBlock Title" class="input-field" />
+    <input required v-model="taskTitle" placeholder="TaskBlock Title" class="input-field" />
 
     
     <!-- TaskBlock Member -->
@@ -99,7 +99,7 @@
             v-if="availableMembers.length"
           >
             <b-dropdown-item
-              v-for="(option, i) in availableMembers"
+              v-for="(option, i) in selectedAssignees"
               :key="i"
               @click="addMember(subgroup, option)"
             >
@@ -144,6 +144,7 @@
       <label class="font-semibold block mb-2">Enter Voting Period Policy</label>
       <div class="flex space-x-2">
         <input
+        required
           type="number"
           v-model="days"
           placeholder="Days"
@@ -152,6 +153,7 @@
           class="border rounded-md p-2 w-20"
         />
         <input
+        required
           type="number"
           v-model="hours"
           placeholder="Hours"
@@ -160,6 +162,7 @@
           class="border rounded-md p-2 w-20"
         />
         <input
+        required
           type="number"
           v-model="minutes"
           placeholder="Minutes"
@@ -168,6 +171,7 @@
           class="border rounded-md p-2 w-20"
         />
         <input
+        required
           type="number"
           v-model="seconds"
           placeholder="Seconds"
@@ -181,8 +185,8 @@
     
 
     <!-- Send Task Button -->
-    <button @click="sendTask" class="send-btn bg-green-400">Create  Task</button>
-  </div>
+    <button type="submit" @click="sendTask" class="send-btn bg-green-400">Create  Task</button>
+  </form>
     
 
   </div>
@@ -193,6 +197,11 @@
 
 
 <script>
+import toastify from 'toastify-js';
+import { mapActions ,mapState} from 'vuex';
+import Toastify from 'toastify-js';
+import 'toastify-js/src/toastify.css';
+
 export default {
   data() {
     return {
@@ -212,10 +221,20 @@ export default {
       selectedAssignees: [],
       selectedSubgroup: [],
       availableMembers: ['Alice', 'Bob', 'Charlie'], // Example member list
-      availableSubgroups: ['Frontend Team', 'Backend Team', 'Design Team'] // Example subgroup list
     };
   },
   methods: {
+    calculateTotalSeconds() {
+      const days = this.days || 0;
+      const hours = this.hours || 0;
+      const minutes = this.minutes || 0;
+      const seconds = this.seconds || 0;
+
+      return days * 24 * 60 + hours * 60 + minutes + seconds;
+    },
+    
+    ...mapActions('taskblocks', ['create']),
+
     createNewSubgroup() {
       // Validate and add a new subgroup
       if (this.newSubgroupName.trim() !== "") {
@@ -252,7 +271,34 @@ export default {
         this.subgroups.splice(index, 1);
       }
     },
-    addTaskBlock() {
+    async addTaskBlock() {
+      if (this.selectedAssignees.length === 0){
+         Toastify({
+            text: "Choose at least one Member",
+            duration: 3000,
+            close: true,
+            gravity: "bottom", // `top` or `bottom`
+            position: "right", // `left`, `center` or `right`
+            backgroundColor: "red",
+          }).showToast();
+        return 
+      }
+
+      await this.create(
+        {
+      name: this.taskTitle, // TaskBlock title
+      percentageToAccept: this.numberValue, // Acceptance percentage
+      voteDurationInMinutes: this.calculateTotalSeconds(), // Convert time inputs to minutes
+      members:this.selectedAssignees,
+      groups: this.subgroups.map(subgroup => ({
+        name: subgroup.name,
+        members: subgroup.members.map(member => ({
+          handle: member // Assuming member is the handle/username
+        }))
+      }))
+    }
+      )
+
     },
      handleTagState(event) {
 

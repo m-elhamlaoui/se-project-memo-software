@@ -41,6 +41,14 @@ public class FriendController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/remove/{friendId}")
+    public ResponseEntity<Void> removeFriend(
+            @AuthenticationPrincipal Member currentUser,
+            @PathVariable Long friendId) {
+        memberService.removeFriend(currentUser.getId(), friendId);
+        return ResponseEntity.ok().build();
+}
+
     @GetMapping
     public ResponseEntity<List<Member>> getFriends(@AuthenticationPrincipal Member member) {
         return ResponseEntity.ok(memberService.getFriends(member.getId()));

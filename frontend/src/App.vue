@@ -50,16 +50,31 @@
 </template>
 
 <script>
+import { mapActions ,mapState} from 'vuex';
 import { StarIcon } from '@heroicons/vue/solid';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue-3/dist/bootstrap-vue-3.css';
+import WebSocketService from '@/services/WebSocketService'
 
 export default {
   data(){
     return{
       isCollapsed:true
     }
+  },
+  methods:{
+    ...mapActions('auth', ['setupUserSocket']),
+
+  },
+
+  async created(){
+    // here you will associate all the websockets
+    await WebSocketService.connect()
+    if(this.$store.state.auth.user.handle){
+      await this.setupUserSocket()
+    }
   }
+  
 }
 </script>
 
