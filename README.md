@@ -1,5 +1,6 @@
 # Task Management System Documentation
 # [Video Demo](https://www.youtube.com/watch?v=Sf9V6xAQNgA)
+if it doesn't work from first time maybe consider copying the link and pasting it in a new tab
 
 ## Table of Contents  
 1. [Project Overview](#project-overview)  
