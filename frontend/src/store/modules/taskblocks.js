@@ -3,6 +3,14 @@ import Toastify from 'toastify-js';
 import 'toastify-js/src/toastify.css';
 import router from '@/router';
 
+const state = {
+    wallets:[]
+  };
+
+  const getters = {
+    wallets: state => state.wallets
+  };
+
 const actions = {
   async create({commit},data){
     try {
@@ -39,8 +47,9 @@ const actions = {
         headers: {
           'Content-Type': 'application/json', // Explicitly setting the content type to JSON
         }});
-        
-        return response.data
+        commit('setwallets', response.data);
+
+        return 
       
     } catch (error) {
 
@@ -56,12 +65,23 @@ const actions = {
 
     }
   },
+  async fetchTaskBlock({commit},data){
+    
+  }
 };
 
+const mutations = {
+    setwallets(state, wallets) {
+      state.wallets = wallets;
+    }
+  };
 
 
 export default {
   namespaced: true,
   actions,
+  state,
+  getters,
+  mutations
 
 };

@@ -5,10 +5,10 @@
     </div>
       <div class=" taskblock-container rounded-xl">
        <taskblockEmpty v-if="wallets.length === 0"/>
-
+        <template v-if="wallets.length !== 0">
        <taskblockCard :key="index"
-        v-for="index,wallet in wallets" :title="wallet.name" />
-       
+        v-for="wallet,index in wallets" :title="wallet.taskBlock" />
+        </template>
       </div>
   </div>
 </template>
@@ -17,19 +17,19 @@
 import taskblockCard from '@/components/taskblocks/taskblockCard.vue'
 import taskblockEmpty from '@/components/taskblocks/taskblockEmpty.vue'
 import { mapActions ,mapState} from 'vuex';
+import LoadingPage from '@/components/layout/LoadingPage.vue';
+import { toRaw } from 'vue';
 
 
 export default {
-  components: { taskblockCard ,taskblockEmpty},
+  components: { taskblockCard ,taskblockEmpty,LoadingPage},
   data(){
     return({
         handle: this.$store.state.auth.user.handle,
-        wallets:[]
+        loading:false,
     })
   },
-  async mounted() {
-
-    
+   mounted() {    
     const message = `Welcome, ${this.handle}!`;
     const welcomeText = this.$refs.welcomeText;
     let i = 0;
@@ -45,12 +45,21 @@ export default {
 
     typeWriter();
 
-    const temp = await this.getTaskblocks(this.$store.state.auth.user.id)
-    this.wallets = temp
+   
+
+  },
+  async created(){
+    await this.getTaskblocks(this.$store.state.auth.user.id)
+    console.log(JSON.parse(JSON.stringify(this.wallets)))
   },
   methods:{
     ...mapActions('taskblocks', ['getTaskblocks']),
-  }
+  }, computed: {
+    wallets() {
+       return JSON.parse(JSON.stringify(this.$store.state.taskblocks.wallets ))      
+    }
+  },
+  
 }
 </script>
 
