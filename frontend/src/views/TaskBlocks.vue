@@ -56,7 +56,9 @@ export default {
     ...mapActions('taskblocks', ['getTaskblocks']),
   }, computed: {
     wallets() {
-       return JSON.parse(JSON.stringify(this.$store.state.taskblocks.wallets ))      
+      if(this.$store.state.taskblocks.wallets)
+       return JSON.parse(JSON.stringify(this.$store.state.taskblocks.wallets ))    
+      return []  
     }
   },
   

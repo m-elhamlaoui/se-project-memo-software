@@ -2,7 +2,7 @@
   <div class="discussion-wrapper">
     <!-- Return Link -->
     <div class="return-link">
-      <a href="/" class="inline-flex items-center text-green-500 hover:text-green-700 font-medium">
+      <a :href="'/dashboard/taskblock/' + this.$route.params.id" class="inline-flex items-center text-green-500 hover:text-green-700 font-medium">
         <span class="mr-2">&larr;</span>
         Back to Dashboard
       </a>
@@ -157,81 +157,81 @@
       </template>
 
       <div class="p-4 space-y-4">
-        <input 
-          v-model="taskTitle" 
-          placeholder="Task Title" 
-          class="input-field" 
-        />
-        
-        <textarea 
-          v-model="taskDescription" 
-          placeholder="Task Description" 
-          class="input-field h-24"
-        ></textarea>
-        
-        <input 
-          v-model="taskDeadline" 
-          type="datetime-local" 
-          class="input-field" 
-        />
-
-        <b-form-group label="Assigned to">
-          <div class="input-group mb-3">
-            <b-form-tags
-              v-model="selectedAssignees"
-              :tag-validator="ValidateMember"
-              separator=" "
-              placeholder="Enter new tags separated by space"
-              remove-on-delete
-              no-add-on-enter
-              class="flex-grow-1"
-            ></b-form-tags>
-            <b-dropdown
-              text="Select a Member"
-              class="ml-2"
-              variant="warning"
-              v-if="availableMembers.length"
-            >
-              <b-dropdown-item
-                v-for="(option, index) in availableMembers"
-                :key="index"
-                @click="addAssignedto(option)"
+        <form @submit.prevent="addTask">
+          <input
+            v-model="taskTitle"
+            placeholder="Task Title"
+            class="input-field"
+          />
+          
+          <textarea
+            v-model="taskDescription"
+            placeholder="Task Description"
+            class="input-field h-24"
+          ></textarea>
+          
+          <input
+            v-model="taskDeadline"
+            type="datetime-local"
+            class="input-field"
+          />
+          <b-form-group label="Assigned to">
+            <div class="input-group mb-3">
+              <b-form-tags
+                v-model="selectedAssignees"
+                :tag-validator="ValidateMember"
+                separator=" "
+                placeholder="Enter new tags separated by space"
+                remove-on-delete
+                no-add-on-enter
+                class="flex-grow-1"
+              ></b-form-tags>
+              <b-dropdown
+                text="Select a Member"
+                class="ml-2"
+                variant="warning"
+                v-if="availableMembers.length"
               >
-                {{ option }}
-              </b-dropdown-item>
-            </b-dropdown>
-          </div>
-        </b-form-group>
-
-        <b-form-group label="Assigned to Subgroups">
-          <div class="input-group mb-3">
-            <b-form-tags
-              v-model="selectedSubgroup"
-              :tag-validator="ValidateSubgroup"
-              separator=" "
-              placeholder="Enter new tags separated by space"
-              remove-on-delete
-              no-add-on-enter
-              class="flex-grow-1"
-            ></b-form-tags>
-            <b-dropdown
-              text="Select Subgroup"
-              class="ml-2"
-              variant="warning"
-              v-if="availableSubgroups.length"
-            >
-              <b-dropdown-item
-                v-for="(option, index) in availableSubgroups"
-                :key="index"
-                @click="addSubgroup(option)"
+                <b-dropdown-item
+                  v-for="(option, index) in availableMembers"
+                  :key="index"
+                  @click="addAssignedto(option)"
+                >
+                  {{ option }}
+                </b-dropdown-item>
+              </b-dropdown>
+            </div>
+          </b-form-group>
+          <b-form-group label="Assigned to Subgroups">
+            <div class="input-group mb-3">
+              <b-form-tags
+                v-model="selectedSubgroup"
+                :tag-validator="ValidateSubgroup"
+                separator=" "
+                placeholder="Enter new tags separated by space"
+                remove-on-delete
+                no-add-on-enter
+                class="flex-grow-1"
+              ></b-form-tags>
+              <b-dropdown
+                text="Select Subgroup"
+                class="ml-2"
+                variant="warning"
+                v-if="availableSubgroups.length"
               >
-                @ {{ option }}
-              </b-dropdown-item>
-            </b-dropdown>
-          </div>
-        </b-form-group>
-
-        <button @click="sendTask" class="send-btn w-full">Create Task</button>
+                <b-dropdown-item
+                  v-for="(option, index) in availableSubgroups"
+                  :key="index"
+                  @click="addSubgroup(option)"
+                >
+                  @ {{ option }}
+                </b-dropdown-item>
+              </b-dropdown>
+            </div>
+          </b-form-group>
+          <button @click="sendTask" class="send-btn w-full">Create Task</button>
+          
+        </form>
       </div>
     </b-modal>
   </div>
@@ -311,8 +311,9 @@ export default {
     }
   },
   methods: {
-    addTask() {
-     
+    async addTask() {
+
+
     },
     formatTime(seconds) {
       if (seconds <= 0) return "Expired";

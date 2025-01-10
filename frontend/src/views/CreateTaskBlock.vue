@@ -236,7 +236,7 @@ export default {
       const minutes = this.minutes || 0;
       const seconds = this.seconds || 0;
 
-      return days * 24 * 60 + hours * 60 + minutes + seconds;
+      return days * 24 * 60 * 60 + hours * 60 * 60 + minutes * 60 + seconds;
     },
     
     ...mapActions('taskblocks', ['create']),

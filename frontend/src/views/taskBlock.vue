@@ -1,16 +1,17 @@
 <template>
+
   <div class="dashboard-container bg-gray-50 h-screen flex flex-col overflow-hidden">
     <!-- Header Card - Fixed at top -->
     <div class="header-card bg-white shadow-sm p-4 flex-shrink-0">
       <div class="space-y-4">
         <!-- Group Name -->
-        <h1 class="text-xl font-bold text-gray-800">{{ groupName }}</h1>
+        <h1 class="text-xl font-bold text-gray-800">{{ taskblock.name }}</h1>
         
         <!-- Stats Row -->
         <div class="flex flex-wrap gap-4">
           <div class="flex items-center text-gray-600 text-sm">
             <span class="font-medium">Admin:</span>
-            <span class="ml-2">{{ admin }}</span>
+            <span class="ml-2">{{ taskblock.creator.handle }}</span>
           </div>
           <div class="flex items-center gap-2 text-gray-600 text-sm">
             <ClockIcon class="h-4 w-4 text-gray-500" />
@@ -18,14 +19,14 @@
           </div>
           <div class="flex items-center gap-2 text-gray-600 text-sm">
             <ChartBarIcon class="h-4 w-4 text-gray-500" />
-            <span>{{ percentage }}% Complete</span>
+            <span>{{ taskblock.percentageToAccept }}% Complete</span>
           </div>
         </div>
 
         <!-- Aura Indicator -->
         <div class="flex items-center justify-center gap-2 bg-gradient-to-r from-green-500 to-green-600 text-white p-2 rounded-lg w-40">
           <CubeIcon class="h-4 w-4" />
-          <span class="font-medium text-sm">{{ aura }} Aura</span>
+          <span class="font-medium text-sm">{{  aura }} Aura</span>
         </div>
       </div>
     </div>
@@ -35,7 +36,7 @@
       <!-- Enter Task Chain Card -->
       <div 
         class="h-32 bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 transition-all hover:shadow-lg cursor-pointer rounded-lg"
-        @click="handleEnterTaskChain"
+        @click="this.$router.push('/dashboard/taskchain/' + this.$route.params.id)"
       >
         <div class="h-full flex items-center justify-center">
           <span class="text-lg font-medium text-white">Enter Task Chain</span>
@@ -55,11 +56,11 @@
         </div>
         <div class="overflow-y-auto max-h-40 pr-2 space-y-1">
           <div 
-            v-for="(member, index) in members" 
+            v-for="(member, index) in taskblock.wallets" 
             :key="index"
             class="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50"
           >
-            <span class="text-sm">{{ member }}</span>
+            <span class="text-sm">{{ member.user.handle }}</span>
             <ChevronRightIcon class="h-4 w-4 text-gray-400" />
           </div>
         </div>
@@ -150,6 +151,7 @@
 
 <script>
 import { ClockIcon, ChartBarIcon, BoxIcon, PlusIcon, ChevronRightIcon,CubeIcon } from '@heroicons/vue/outline'
+import { mapActions ,mapState} from 'vuex';
 
 export default {
   name: 'DashboardView',
@@ -167,9 +169,6 @@ export default {
     return {
       groupName: 'Development Sprint Q1',
       admin: 'JohnDoe',
-      timePeriod: 172800,
-      percentage: 87,
-      aura: 100,
       members: ['Sarah Chen', 'Mike Ross', 'Emily Wang', 'David Kim', 'Alex Johnson', 'Lisa Park', 'Tom Wilson'],
       pendingTasks: [
         'API Integration', 
@@ -191,18 +190,34 @@ export default {
       availableMembers: ['John Smith', 'Jane Doe', 'Bob Wilson']
     }
   },
-
   computed: {
+    taskblock() {
+      if(this.$store.state.taskblocks.taskblock)return this.$store.state.taskblocks.taskblock
+      return {creator:{},percentageToAccept:0}
+    },
     formattedTime() {
-      const days = Math.floor(this.timePeriod / 86400)
-      const hours = Math.floor((this.timePeriod % 86400) / 3600)
-      const minutes = Math.floor((this.timePeriod % 3600) / 60)
-      const seconds = this.timePeriod % 60
+      const days = Math.floor(this.taskblock.voteDurationInSeconds / 86400)
+      const hours = Math.floor((this.taskblock.voteDurationInSeconds % 86400) / 3600)
+      const minutes = Math.floor((this.taskblock.voteDurationInSeconds % 3600) / 60)
+      const seconds = this.taskblock.voteDurationInSeconds % 60
       return `${days}d:${hours}h:${minutes}m:${seconds}s`
-    }
+    },
+    aura(){ 
+      if(this.$store.state.taskblocks.wallets){
+         if (this.$store.state.taskblocks.wallets.find((w)=>{return String(w.taskBlock.id)=== this.$route.params.id}))
+        return (this.$store.state.taskblocks.wallets.find((w)=>{return String(w.taskBlock.id)=== this.$route.params.id})).balance 
+        return 0
+      }
+      return 0
+    },
+
+    
+
   },
 
   methods: {
+    ...mapActions('taskblocks', ['fetchTaskBlock','getTaskblocks']),
+
     handleEnterTaskChain() {
       console.log('Entering task chain...')
     },
@@ -224,7 +239,12 @@ export default {
       this.selectedMembers = []
       this.showAddMemberModal = false
     }
-  }
+  },
+  async created(){
+    await this.getTaskblocks(this.$store.state.auth.user.id)
+    await this.fetchTaskBlock(this.$route.params.id)
+
+  },
 }
 </script>
 
