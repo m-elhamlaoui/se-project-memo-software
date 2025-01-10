@@ -37,7 +37,7 @@ const actions = {
             gravity: "bottom", // `top` or `bottom`
             position: "right", // `left`, `center` or `right`
             backgroundColor: "orange",
-          }).showToast();
+          }).showToast();       
           return []
 
     }
@@ -91,6 +91,7 @@ const actions = {
       }
 
   }
+
 };
 
 const mutations = {

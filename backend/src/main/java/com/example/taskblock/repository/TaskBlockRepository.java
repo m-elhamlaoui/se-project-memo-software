@@ -11,10 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface TaskBlockRepository extends JpaRepository<TaskBlock, Long> {
-    @Query("SELECT tb FROM TaskBlock tb " +
-            "LEFT JOIN FETCH tb.tasks " +
-            "LEFT JOIN FETCH tb.wallets " +
-            "WHERE tb.id = :taskBlockId")
+    @Query("SELECT tb FROM TaskBlock tb WHERE tb.id = :taskBlockId")
     Optional<TaskBlock> findById(@Param("taskBlockId") Long taskBlockId);
 
     // Existing method for user's taskblocks

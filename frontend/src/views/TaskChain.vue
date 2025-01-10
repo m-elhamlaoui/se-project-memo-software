@@ -4,7 +4,7 @@
     <div class="return-link">
       <a :href="'/dashboard/taskblock/' + this.$route.params.id" class="inline-flex items-center text-green-500 hover:text-green-700 font-medium">
         <span class="mr-2">&larr;</span>
-        Back to Dashboard
+        Back to Dashboard 
       </a>
     </div>
 
@@ -111,20 +111,21 @@
 
             <!-- Vote Buttons -->
             <div class="flex space-x-4 mt-4">
-              <button
+              <button v-if="!message.alive"
                 @click.stop="vote(index, 'accept')"
                 class="flex-1 py-2 px-4 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors"
               >
                 Accept
               </button>
               <button
+              v-if="!message.alive"
                 @click.stop="vote(index, 'reject')"
                 class="flex-1 py-2 px-4 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors"
               >
                 Reject
               </button>
               <div
-                v-if="true"
+              v-if="message.alive"
                 class="flex-1 py-2 px-4 bg-green-300 text-white rounded-lg text-center"
               >
                 Voted
@@ -143,103 +144,90 @@
     </div>
 
     <!-- Add Task Modal -->
-    <b-modal
-      id="detail-modal"
-      size="lg"
-      hide-footer   
-      v-model="showtaskadd"
-      @hidden="showtaskadd = false"
-      centered
-      class="slide-in"
-    >
-      <template #modal-title>
-        <h3 class="text-lg font-semibold">Add Task</h3>
-      </template>
+    <b-modal id="detail-modal" size="lg" hide-footer v-model="showtaskadd" @hidden="showtaskadd = false" centered class="slide-in">
+  <template #modal-title>
+    <h3 class="text-lg font-semibold">Add Task</h3>
+  </template>
 
-      <div class="p-4 space-y-4">
-        <form @submit.prevent="addTask">
-          <input
-            v-model="taskTitle"
-            placeholder="Task Title"
-            class="input-field"
-          />
-          
-          <textarea
-            v-model="taskDescription"
-            placeholder="Task Description"
-            class="input-field h-24"
-          ></textarea>
-          
-          <input
-            v-model="taskDeadline"
-            type="datetime-local"
-            class="input-field"
-          />
-          <b-form-group label="Assigned to">
-            <div class="input-group mb-3">
-              <b-form-tags
-                v-model="selectedAssignees"
-                :tag-validator="ValidateMember"
-                separator=" "
-                placeholder="Enter new tags separated by space"
-                remove-on-delete
-                no-add-on-enter
-                class="flex-grow-1"
-              ></b-form-tags>
-              <b-dropdown
-                text="Select a Member"
-                class="ml-2"
-                variant="warning"
-                v-if="availableMembers.length"
-              >
-                <b-dropdown-item
-                  v-for="(option, index) in availableMembers"
-                  :key="index"
-                  @click="addAssignedto(option)"
-                >
-                  {{ option }}
-                </b-dropdown-item>
-              </b-dropdown>
-            </div>
-          </b-form-group>
-          <b-form-group label="Assigned to Subgroups">
-            <div class="input-group mb-3">
-              <b-form-tags
-                v-model="selectedSubgroup"
-                :tag-validator="ValidateSubgroup"
-                separator=" "
-                placeholder="Enter new tags separated by space"
-                remove-on-delete
-                no-add-on-enter
-                class="flex-grow-1"
-              ></b-form-tags>
-              <b-dropdown
-                text="Select Subgroup"
-                class="ml-2"
-                variant="warning"
-                v-if="availableSubgroups.length"
-              >
-                <b-dropdown-item
-                  v-for="(option, index) in availableSubgroups"
-                  :key="index"
-                  @click="addSubgroup(option)"
-                >
-                  @ {{ option }}
-                </b-dropdown-item>
-              </b-dropdown>
-            </div>
-          </b-form-group>
-          <button @click="sendTask" class="send-btn w-full">Create Task</button>
-          
-        </form>
+  <div class="p-6">
+    <form @submit.prevent="addTask" class="space-y-4">
+      <div class="space-y-2">
+        <label class="block text-sm font-medium text-gray-700">Task Title</label>
+        <input required v-model="taskTitle" placeholder="Enter task title" class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-green-500"/>
       </div>
-    </b-modal>
+
+      <div class="space-y-2">
+        <label class="block text-sm font-medium text-gray-700">Description</label>
+        <textarea required v-model="taskDescription" placeholder="Enter task description" class="w-full px-3 py-2 border rounded-md h-24 focus:ring-2 focus:ring-green-500"></textarea>
+      </div>
+
+      <div class="space-y-2">
+        <label class="block text-sm font-medium text-gray-700">Deadline</label>
+        <input required v-model="taskDeadline" type="datetime-local" class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-green-500"/>
+      </div>
+
+      <b-form-group label="Assigned to" class="space-y-2">
+        <div class="flex gap-2">
+          <b-form-tags
+            v-model="selectedAssignees"
+            :tag-validator="ValidateMember"
+            separator=" "
+            placeholder="Enter members"
+            remove-on-delete
+            no-add-on-enter
+            class="flex-grow"
+          ></b-form-tags>
+          <b-dropdown text="Select" variant="warning" v-if="availableMembers.length">
+            <b-dropdown-item v-for="(option, index) in availableMembers" :key="index" @click="addAssignedto(option)">
+              {{ option }}
+            </b-dropdown-item>
+          </b-dropdown>
+        </div>
+      </b-form-group>
+
+      <b-form-group label="Assigned to Subgroups" class="space-y-2">
+        <div class="flex gap-2">
+          <b-form-tags
+            v-model="selectedSubgroup"
+            :tag-validator="ValidateSubgroup"
+            separator=" "
+            placeholder="Enter subgroups"
+            remove-on-delete
+            no-add-on-enter
+            class="flex-grow"
+          ></b-form-tags>
+          <b-dropdown text="Select" variant="warning" v-if="availableSubgroups.length">
+            <b-dropdown-item v-for="(option, index) in availableSubgroups" :key="index" @click="addSubgroup(option)">
+              @ {{ option }}
+            </b-dropdown-item>
+          </b-dropdown>
+        </div>
+      </b-form-group>
+
+      <button type="submit" @click="sendTask" class="w-full py-2 mt-4 text-white bg-green-500 rounded-md hover:bg-green-600 focus:ring-2 focus:ring-green-500">
+        Create Task
+      </button>
+    </form>
+  </div>
+</b-modal>
   </div>
 </template>
 
 
 <script>
+import { mapActions ,mapState} from 'vuex';
+
 export default {
+  computed: {
+    taskblock() {
+      if(this.$store.state.taskblocks.taskblock)return this.$store.state.taskblocks.taskblock
+      return {creator:{},percentageToAccept:0}
+    },
+    availableMembers() {
+      if(this.$store.state.taskblocks.taskblock)return this.$store.state.taskblocks.taskblock.wallets.map((w)=>{return w.user.handle})
+      return []
+    }
+  },
   data() {
     return {
     showtaskadd:false,
@@ -247,16 +235,17 @@ export default {
       showstats:true,
       tasks: [
         {
-          username: "John Doe",
-          timestamp: "2025-01-08 10:30",
+          alive:true,
+          username: "Oussama",
+          timestamp: "2025-01-10 10:30",
           type: "task",
-          voteStatus: "on-going", // "accepted", "rejected", or "on-going"
+          voteStatus: "rejected", // "accepted", "rejected", or "on-going"
           content: {
             title: "Improve Dashboard UI",
-            description: "Redesign the iwef weofimwoiemf eoifmweoifwef efoiwmefoimwefwef eiomewfoiwef ewfoimwefoimwef wefoimwefoimwef weoimwoeimfwef oimowemfw efoimef wefoimwef weoifm ewfowief oimdashboard to enhance user experience and improve navigation.",
+            description: "this task is assigned to the frontend team to improve the existing components",
               deadline:"2021-10-16",
-              assignedUsers:["hi","ef","efef","efoine"],
-              assignedSubgroups:["@frontend tee","wefwef"]
+              assignedUsers:["Ahmed","ouvh","Ayman","Mouad"],
+              assignedSubgroups:["@frontend tee"]
 
           },
           showStats: false,
@@ -264,44 +253,51 @@ export default {
             accepted: 15,
             rejected: 5,
           },
-          timeLeft:5,
+          timeLeft:0,
 
         },
         {
-          username: "John Doe",
-          timestamp: "2025-01-08 10:30",
+          alive:false,
+          username: "Elghali",
+          timestamp: "2025-03-12 10:30",
           type: "task",
           voteStatus: "on-going", // "accepted", "rejected", or "on-going"
           content: {
-            title: "Improve Dashboard UI",
-            description: "Redesign the iwef weofimwoiemf eoifmweoifwef efoiwmefoimwefwef eiomewfoiwef ewfoimwefoimwef wefoimwefoimwef weoimwoeimfwef oimowemfw efoimef wefoimwef weoifm ewfowief oimdashboard to enhance user experience and improve navigation.",
+            title: "Backend down , Urgent Handler is needed",
+            description: "the main instance of the server is currentely down , the team is needed to investigate on this issue",
             deadline:"2021-10-16",
-            assignedUsers:["hi","ef","efef","efoine"],
-            assignedSubgroups:["@frontend tee","wefwef"]
+            assignedUsers:["Ahmed","ouvh","Ayman","Mouad"],
+            assignedSubgroups:["@backend ","wefwef"]
 
           },
           showStats: false,
-          timeLeft:5,
+          timeLeft:500,
           votes: {
             accepted: 15,
             rejected: 5,
           },
         },
       ],
+      iiiii:this.$route.params.id ,
       filteredMembers:[],
       taskTitle: '',
       taskDescription: '',
       taskDeadline: '',
       selectedAssignees: [],
       selectedSubgroup: [],
-      availableMembers: ['Alice', 'Bob', 'Charlie'], // Example member list
       availableSubgroups: ['Frontend Team', 'Backend Team', 'Design Team'] ,// Example subgroup list
        countdownInterval: null,
     };
   },
-  mounted() {
+  async mounted() {
+    await this.getTaskblocks(this.$store.state.auth.user.id)
+    await this.fetchTaskBlock(this.$route.params.id)
     // Start updating countdown every second
     this.updateCountdowns();
+    this.availableMembers = this.$store.state.taskblocks.wallets
+    console.log("this",this.availableMembers)
+    this.availableSubgroups =await  this.getgroups(this.$route.params.id); 
+    console.log("HEllo",this.availableSubgroups)
   },
 
   beforeDestroy() {
@@ -311,8 +307,18 @@ export default {
     }
   },
   methods: {
-    async addTask() {
+    ...mapActions('tasks', ['createTask','getgroups']),
+    ...mapActions('taskblocks', ['fetchTaskBlock','getTaskblocks']),
 
+    async addTask() {
+        await this.createTask({
+          "title" : this.taskTitle,
+          "description":this.taskDescription,
+          "durationSeconds": 1000,
+          "taggedGroupsIds": this.selectedSubgroup,
+          "taggedMemberName":this.selectedAssignees,
+          "id":this.$route.params.id
+        })
 
     },
     formatTime(seconds) {
@@ -350,13 +356,14 @@ export default {
     vote(index, type) {
       if (type === "accept") {
         this.tasks[index].votes.accepted++;
+        this.tasks[index].alive = true
       } else if (type === "reject") {
         this.tasks[index].votes.rejected++;
       }
+      this.tasks[index].alive = true
+
 
       
-
-    
     },
     toggleTaskDetails(index) {
       this.tasks[index].showStats = !this.tasks[index].showStats;

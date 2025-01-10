@@ -10,6 +10,7 @@ import com.example.taskblock.repository.VoteRepository;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -35,10 +36,11 @@ public class TaskBlock {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    @BatchSize(size = 100)
     @OneToMany(mappedBy = "taskBlock", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
     private List<Task> tasks = new ArrayList<>(); // Initialize as empty list to avoid null issues
 
-    
+    @BatchSize(size = 100)
     @OneToMany(mappedBy = "taskBlock", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
     private List<Wallet> wallets = new ArrayList<>(); // Initialize as empty list to avoid null issues
 

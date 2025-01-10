@@ -6,11 +6,16 @@ import com.example.taskblock.model.taskblock.TaskBlock;
 import com.example.taskblock.model.taskblock.TaskBlockGroup;
 import com.example.taskblock.model.user.Member;
 import com.example.taskblock.model.vote.Vote;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 
 @Entity
 @Table(name = "tasks")
@@ -32,7 +37,10 @@ public class Task implements TaskSubject {
 
     @ManyToOne
     @JoinColumn(name = "taskblock_id", nullable = false)
+    @JsonIgnore
     private TaskBlock taskBlock;
+
+
 
     @Column(name = "duration_seconds", nullable = false)
     private Integer durationSeconds = 0;
@@ -217,6 +225,7 @@ public class Task implements TaskSubject {
             joinColumns = @JoinColumn(name = "task_id"),
             inverseJoinColumns = @JoinColumn(name = "member_id")
     )
+    @JsonIgnore
     @OrderColumn(name = "individual_order")
     private List<Member> taggedIndividuals = new ArrayList<>();
 
@@ -226,6 +235,7 @@ public class Task implements TaskSubject {
             joinColumns = @JoinColumn(name = "task_id"),
             inverseJoinColumns = @JoinColumn(name = "group_id")
     )
+    @JsonIgnore
     @OrderColumn(name = "group_order")
     private List<TaskBlockGroup> taggedGroups = new ArrayList<>();
 
