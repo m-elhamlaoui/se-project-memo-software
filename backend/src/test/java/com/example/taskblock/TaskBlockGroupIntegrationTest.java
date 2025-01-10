@@ -1,6 +1,5 @@
 package com.example.taskblock;
 
-
 import com.example.taskblock.model.taskblock.TaskBlock;
 import com.example.taskblock.model.task.Task;
 import com.example.taskblock.model.taskblock.TaskBlockGroup;
@@ -25,8 +24,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-public class TaskBlockGroupIntegrationTest {
 
+
+public class TaskBlockGroupIntegrationTest {
     @Autowired
     private TaskBlockGroupService taskBlockGroupService;
 
@@ -51,6 +51,14 @@ public class TaskBlockGroupIntegrationTest {
     private Member member3;
     private TaskBlock taskBlock;
 
+    private Member createTestMember(String email, String handle) {
+        Member member = new Member();
+        member.setEmail(email);
+        member.setHandle(handle);
+        member.setPassword("password123");
+        return memberRepository.save(member);
+    }
+
     @BeforeEach
     void setUp() {
         // Create test members
@@ -64,19 +72,13 @@ public class TaskBlockGroupIntegrationTest {
         member2 = createTestMember("member2@test.com", "member2");
         member3 = createTestMember("member3@test.com", "member3");
 
-        // Create taskblock
+        // Create taskblock with all required fields
         taskBlock = new TaskBlock();
         taskBlock.setName("Test TaskBlock");
         taskBlock.setCreator(creator);
+        taskBlock.setPercentageToAccept(75.0);
+        taskBlock.setVoteDurationInSeconds(60);  // Changed to match TaskBlock entity
         taskBlock = taskBlockRepository.save(taskBlock);
-    }
-
-    private Member createTestMember(String email, String handle) {
-        Member member = new Member();
-        member.setEmail(email);
-        member.setHandle(handle);
-        member.setPassword("password123");
-        return memberRepository.save(member);
     }
 
     @Test
@@ -94,7 +96,6 @@ public class TaskBlockGroupIntegrationTest {
                 "Testers"
         );
 
-        // Verify groups were created
         assertNotNull(developers.getId());
         assertNotNull(testers.getId());
 
@@ -113,7 +114,6 @@ public class TaskBlockGroupIntegrationTest {
                 Arrays.asList(member2.getId(), member3.getId())
         );
 
-        // Verify members were added
         List<Member> devMembers = taskBlockGroupService.getGroupMembers(developers.getId());
         assertEquals(2, devMembers.size());
         assertTrue(devMembers.contains(member1));
@@ -124,14 +124,10 @@ public class TaskBlockGroupIntegrationTest {
         assertTrue(testMembers.contains(member2));
         assertTrue(testMembers.contains(member3));
 
-        // 3. Create a task and tag groups and individuals
-        Task task = new Task("Implement feature", "New feature implementation", taskBlock);
+        // 3. Create a task with required fields
+        Task task = new Task("Implement feature", "New feature implementation", taskBlock, 3600);
         task.setStatus(TaskStatus.PENDING);
-
-// Add creator as tagged individual using the proper helper method
         task.addTaggedIndividual(creator);
-
-// Save the task
         task = taskRepository.save(task);
 
         taskService.tagGroup(task.getId(), developers.getId());
@@ -141,27 +137,17 @@ public class TaskBlockGroupIntegrationTest {
         Task savedTask = taskRepository.findById(task.getId()).orElseThrow();
         assertEquals(2, savedTask.getTaggedGroups().size());
         assertTrue(savedTask.getTaggedIndividuals().contains(creator));
-        // Get all involved members (from groups + individually tagged)
+
         List<Member> allTaggedMembers = taskService.getAllTaggedMembers(task.getId());
-
-        for(Member member : allTaggedMembers) {
-            System.out.println(member.getUsername());
-        }
         assertEquals(4, allTaggedMembers.size()); // creator + unique members from both groups
-
-
 
         // 5. Remove group tag from task
         taskService.untagGroup(task.getId(), testers.getId());
-
-        // Verify group was untagged
         savedTask = taskRepository.findById(task.getId()).orElseThrow();
         assertEquals(1, savedTask.getTaggedGroups().size());
 
         // 6. Delete group
         taskBlockGroupService.deleteGroup(taskBlock.getId(), testers.getId(), creator.getId());
-
-        // Verify group was deleted
         List<TaskBlockGroup> remainingGroups = taskBlockGroupService.getGroupsInTaskBlock(taskBlock.getId());
         assertEquals(1, remainingGroups.size());
         assertEquals(developers.getId(), remainingGroups.get(0).getId());

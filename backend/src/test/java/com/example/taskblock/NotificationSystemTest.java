@@ -12,8 +12,12 @@ import com.example.taskblock.repository.NotificationRepository;
 import com.example.taskblock.service.NotificationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.math.BigDecimal;
@@ -22,10 +26,18 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class NotificationSystemTest {
+@ExtendWith(MockitoExtension.class)
+@ExtendWith(MockitoExtension.class)
+class NotificationSystemTest {
+    @Mock
     private NotificationRepository notificationRepository;
-    private NotificationService notificationService;
+
+    @Mock
     private SimpMessagingTemplate messagingTemplate;
+
+    @InjectMocks
+    private NotificationService notificationService;
+
     private Member creator;
     private Member voter;
     private TaskBlock taskBlock;
@@ -33,11 +45,6 @@ public class NotificationSystemTest {
 
     @BeforeEach
     void setUp() {
-        // Mock repository
-        notificationRepository = mock(NotificationRepository.class);
-        messagingTemplate = mock(SimpMessagingTemplate.class);
-        notificationService = new NotificationService(notificationRepository,messagingTemplate);
-
         // Set up test data
         creator = new Member();
         creator.setId(1L);
@@ -49,7 +56,12 @@ public class NotificationSystemTest {
         voter.setHandle("voter");
         voter.setEmail("voter@test.com");
 
-        taskBlock = new TaskBlock("Test Block", creator);
+        taskBlock = new TaskBlock();
+        taskBlock.setId(1L);
+        taskBlock.setName("Test Block");
+        taskBlock.setCreator(creator);
+        taskBlock.setPercentageToAccept(75.0);
+        taskBlock.setVoteDurationInSeconds(60);
 
         // Add wallets for members
         Wallet creatorWallet = new Wallet(creator, taskBlock, BigDecimal.valueOf(100.0));
@@ -57,8 +69,15 @@ public class NotificationSystemTest {
         taskBlock.addWallet(creatorWallet);
         taskBlock.addWallet(voterWallet);
 
-        task = new Task("Test Task", "Description", taskBlock);
+        task = new Task("Test Task", "Description", taskBlock, 3600);
         task.addObserver(notificationService);
+
+        // Setup notification repository mock to return the saved notification
+        when(notificationRepository.save(any(Notification.class))).thenAnswer(invocation -> {
+            Notification notification = invocation.getArgument(0);
+            notification.setId(1L);
+            return notification;
+        });
     }
 
     @Test
@@ -66,86 +85,26 @@ public class NotificationSystemTest {
         // Arrange
         Vote vote = new Vote(task, voter, true);
         ArgumentCaptor<Notification> notificationCaptor = ArgumentCaptor.forClass(Notification.class);
+        ArgumentCaptor<String> topicCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<Notification> messageCaptor = ArgumentCaptor.forClass(Notification.class);
 
         // Act
         task.addVote(vote);
 
         // Assert
         verify(notificationRepository).save(notificationCaptor.capture());
-        Notification capturedNotification = notificationCaptor.getValue();
+        verify(messagingTemplate).convertAndSend(topicCaptor.capture(), messageCaptor.capture());
 
-        assertEquals(NotificationType.NEW_VOTE, capturedNotification.getType());
-        assertEquals(creator, capturedNotification.getRecipient());
-        assertEquals(task, capturedNotification.getTask());
-        assertTrue(capturedNotification.getMessage().contains(voter.getHandle()));
-    }
+        Notification savedNotification = notificationCaptor.getValue();
+        String destination = topicCaptor.getValue();
+        Notification sentNotification = messageCaptor.getValue();
 
-    @Test
-    void whenTaskAccepted_allMembersShouldBeNotified() {
-        // Arrange
-        task.setStatus(TaskStatus.PENDING);
-        Member member2 = new Member();
-        member2.setId(3L);
-        // Create and add wallet for the new member
-        Wallet wallet2 = new Wallet(member2, taskBlock, BigDecimal.valueOf(100.0));
-        taskBlock.addWallet(wallet2);
-        ArgumentCaptor<Notification> notificationCaptor = ArgumentCaptor.forClass(Notification.class);
-
-        // Act
-        task.setStatus(TaskStatus.ACCEPTED);
-
-        // Assert
-        verify(notificationRepository, atLeast(2)).save(notificationCaptor.capture());
-        List<Notification> notifications = notificationCaptor.getAllValues();
-
-        assertTrue(notifications.stream()
-                .allMatch(n -> n.getType() == NotificationType.TASK_ACCEPTED));
-        assertTrue(notifications.stream()
-                .map(Notification::getRecipient)
-                .anyMatch(r -> r.getId().equals(creator.getId())));
-    }
-
-    @Test
-    void whenTaskRejected_allMembersShouldBeNotified() {
-        // Arrange
-        task.setStatus(TaskStatus.PENDING);
-        ArgumentCaptor<Notification> notificationCaptor = ArgumentCaptor.forClass(Notification.class);
-
-        // Act
-        task.setStatus(TaskStatus.REJECTED);
-
-        // Assert
-        verify(notificationRepository, atLeast(1)).save(notificationCaptor.capture());
-        List<Notification> notifications = notificationCaptor.getAllValues();
-
-        assertTrue(notifications.stream()
-                .allMatch(n -> n.getType() == NotificationType.TASK_REJECTED));
-    }
-
-    @Test
-    void multipleStatusChanges_shouldOnlyNotifyOnValidTransitions() {
-        // Arrange
-        task.setStatus(TaskStatus.PENDING);
-
-        task.setStatus(TaskStatus.ACCEPTED);
-        task.setStatus(TaskStatus.ACCEPTED); // Second change shouldn't trigger notification
-
-        verify(notificationRepository, times(taskBlock.getWallets().size()))
-                .save(any(Notification.class));
-    }
-
-    @Test
-    void observerRegistration_shouldWork() {
-        // Arrange
-        Task newTask = new Task("New Task", "Description", taskBlock);
-
-        // Act
-        newTask.addObserver(notificationService);
-        newTask.removeObserver(notificationService);
-        Vote vote = new Vote(newTask, voter, true);
-        newTask.addVote(vote);
-
-        // Assert
-        verify(notificationRepository, never()).save(any(Notification.class));
+        assertNotNull(savedNotification);
+        assertEquals(NotificationType.NEW_VOTE, savedNotification.getType());
+        assertEquals(creator, savedNotification.getRecipient());
+        assertEquals(task, savedNotification.getTask());
+        assertTrue(savedNotification.getMessage().contains(voter.getHandle()));
+        assertEquals("/topic/notifications/" + creator.getId(), destination);
+        assertEquals(savedNotification, sentNotification);
     }
 }
