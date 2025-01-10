@@ -48,6 +48,7 @@ public class TaskBlockController {
             @AuthenticationPrincipal Member currentUser,
             @PathVariable Long taskBlockId) {
         TaskBlock taskBlock = taskBlockService.getTaskBlockById(taskBlockId).orElse(null);
+        
         if (taskBlock != null)
         return ResponseEntity.ok(taskBlock);
         else return ResponseEntity.badRequest().body("not found");

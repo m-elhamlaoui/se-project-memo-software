@@ -1,6 +1,5 @@
 package com.example.taskblock.service;
 
-import com.example.taskblock.model.taskblock.TaskBlock;
 import com.example.taskblock.model.wallet.Wallet;
 import com.example.taskblock.repository.WalletRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +8,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class WalletService {

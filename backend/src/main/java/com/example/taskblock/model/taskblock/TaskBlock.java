@@ -38,6 +38,7 @@ public class TaskBlock {
     @OneToMany(mappedBy = "taskBlock", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
     private List<Task> tasks = new ArrayList<>(); // Initialize as empty list to avoid null issues
 
+    
     @OneToMany(mappedBy = "taskBlock", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
     private List<Wallet> wallets = new ArrayList<>(); // Initialize as empty list to avoid null issues
 

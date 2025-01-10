@@ -3,7 +3,6 @@ package com.example.taskblock.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.web3j.protocol.Web3j;
-import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
 @Service
 public class BlockchainService {
