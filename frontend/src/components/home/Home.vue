@@ -4,68 +4,59 @@
       <h1 class="text-2xl font-bold text-green-500 mr-20">Home</h1>
       <div class="bg-white rounded-xl p-4 shadow-md border border-gray-200 flex justify-center w-4/5">
         <ul class="flex gap-x-8 text-gray-600">
-          <li class="text-lg font-medium hover:underline transition duration-200 ">
-            <a href="#" @click="scrollToInfo" >What is TaskBlock?</a>
-          </li>
-          
-          <li class="text-lg font-medium hover:text-gray-800 hover:underline transition duration-200">
-            <a href="#" @click="scrollToWallet">Wallet</a>
+          <li class="text-lg font-medium hover:underline transition duration-200">
+            <a href="#task-block-app" @click.prevent="scrollToSection('task-block-app')">
+              What is TaskBlock?
+            </a>
           </li>
 
           <li class="text-lg font-medium hover:text-gray-800 hover:underline transition duration-200">
-           <a href="#" @click="scrollToVoting">Our voting system</a> 
+            <a href="#wallet-block-app" @click.prevent="scrollToSection('wallet-block-app')">
+              Wallet
+            </a>
           </li>
 
-          
           <li class="text-lg font-medium hover:text-gray-800 hover:underline transition duration-200">
-            More
+            <a href="#voting-system-section" @click.prevent="scrollToSection('voting-system-section')">
+              Our voting system
+            </a>
+          </li>
+
+          <li class="text-lg font-medium hover:text-gray-800 hover:underline transition duration-200">
+            <a href="#" @click.prevent="navigateToLogin">Login</a>
           </li>
         </ul>
       </div>
     </header>
-
-    <!-- Sections with existing ids to scroll to -->
-    
   </div>
 </template>
 
 <script>
 export default {
   methods: {
-    scrollToWallet() {
-      const element = document.getElementById('wallet-block-app');
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
-    },
-    scrollToInfo() {
-      const element = document.getElementById('task-block-app');
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
-    },
-    handleScroll() {
-      const sections = document.querySelectorAll("section");
-      sections.forEach((section) => {
-        const rect = section.getBoundingClientRect();
-        if (rect.top < window.innerHeight * 0.8) {
-          section.classList.add("opacity-100", "translate-y-0");
+    scrollToSection(sectionId) {
+      // Only attempt to scroll if we're on the home page
+      if (this.$route.path === '/') {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
         }
-      });
-    } , 
-    scrollToVoting() {
-      const element = document.getElementById('voting-system-section');
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        // If we're not on home page, navigate there first
+        this.$router.push('/').then(() => {
+          this.$nextTick(() => {
+            const element = document.getElementById(sectionId);
+            if (element) {
+              element.scrollIntoView({ behavior: 'smooth' });
+            }
+          });
+        });
       }
     },
-  },
-  mounted() {
-    window.addEventListener("scroll", this.handleScroll);
-    this.handleScroll(); // Check initially in case the sections are already in view
-  },
-  beforeDestroy() {
-    window.removeEventListener("scroll", this.handleScroll);
+    
+    navigateToLogin() {
+      this.$router.push('/login');
+    }
   }
 };
 </script>
@@ -73,7 +64,7 @@ export default {
 <style scoped>
 /* Hover effect on navigation items */
 li:hover {
-  color: #7FFF00; /* Change text color to chartreuse (light green) on hover */
+  color: #7FFF00;
   cursor: pointer;
 }
 
@@ -86,7 +77,4 @@ li:hover {
 html {
   scroll-behavior: smooth;
 }
-
-
-
 </style>
