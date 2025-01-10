@@ -261,7 +261,7 @@ Enables reactive system behavior through:
 
 ---
 ## Backend Structure
-``
+````
 src/
 ├── main/
 │   ├── java/
@@ -285,7 +285,7 @@ src/
 │   |    └── application.properties
 |   └──test/
 |        └───...
-``
+````
 
 ## Getting Started
 
