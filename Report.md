@@ -1,39 +1,181 @@
-# Task Management System
+# Task Management System Documentation
 
-## Overview
-A cutting-edge task management platform that combines traditional task organization with blockchain technology to provide a transparent and democratic decision-making process. It supports a flexible voting system to handle task-related decisions efficiently.
+## Project Overview
 
----
+The Task Management System is a revolutionary platform that combines traditional task management capabilities with blockchain technology to create a secure, transparent, and democratic workspace. At its core, the system enables teams to collaborate on tasks while ensuring fair decision-making through a sophisticated voting mechanism and secure user authentication via blockchain wallets.
 
-## Features
+The system's unique approach lies in its integration of blockchain technology for user authentication and voting processes, making it particularly suitable for decentralized teams and organizations that value democratic decision-making. Each user action is secured through their personal blockchain wallet, ensuring accountability and traceability of all decisions made within the system.
 
-### Core Functionality
-- **Task Management**
-  - CRUD (Create, Read, Update, Delete) operations for tasks and task blocks
-  - Track and update task progress, status, and completion
-  - Set deadlines, priorities, and reminders for tasks
-  - Organize tasks hierarchically under specific task blocks
+
+## Core Components
+
+### TaskBlock
+A TaskBlock serves as the primary organizational unit within the system. Think of it as a secure, collaborative workspace where team members come together to manage tasks and make decisions. Key characteristics include:
+
+- Self-contained workspace for specific projects or teams
+- Democratic decision-making through integrated voting system
+- Secure member authentication via blockchain wallets
+- Customizable voting parameters and thresholds
+- Support for multiple working groups within the same TaskBlock
+
+### Groups
+Groups represent specialized subsets of members within a TaskBlock. They enable efficient task distribution and management by:
+
+- Organizing members based on roles, skills, or responsibilities
+- Facilitating focused communication within specific team segments
+- Allowing targeted task assignments
+- Supporting hierarchical team structures
+- Managing access permissions at a granular level
+
+Example: A software development TaskBlock might contain groups like "Frontend Developers," "Backend Developers," and "QA Team."
+
+### Tasks
+Tasks are the fundamental units of work within the system. They are characterized by:
+
+- Clear ownership and accountability
+- Voting-based approval and completion verification
+- Flexible assignment to individuals or groups
+- Priority and deadline management
+- Progress tracking and status updates
+- Tagging and categorization capabilities
 
 ### Voting System
-- **Customizable Voting Mechanism**
-  - Runtime-adjustable strategies for task or project approval
-  - Configurable voting duration (e.g., from minutes to days)
-  - Adjustable voting thresholds (percentage-based approvals)
-  - Real-time updates on vote status and results
-  - Flexible decision-making for task block modifications or task deletion
+The voting system forms the backbone of democratic decision-making within the platform. It features:
+
+- Multiple voting strategies (e.g., majority, unanimous, weighted)
+- Configurable voting durations
+- Adjustable approval thresholds
+- Blockchain-based vote recording
+- Real-time voting progress tracking
+- Automatic result execution
+
+### Notification System
+The notification system ensures effective communication and awareness across the platform through:
+
+- Real-time updates on task changes
+- Voting deadline reminders
+- Assignment notifications
+- Group invitation alerts
+- Status change broadcasts
+- Custom notification preferences
+
+## Blockchain Integration
+
+The system leverages blockchain technology for:
+
+### Authentication and Security
+- Secure user identification through personal wallets
+- Immutable activity logging
+- Transparent decision tracking
+- Cryptographic security for all transactions
+
+### Voting Mechanism
+- Tamper-proof vote recording
+- Verifiable voting results
+- Transparent decision history
+- Secure vote counting and tabulation
+
+## Design Patterns
+
+### Singleton Pattern
+Used for managing critical system components that require single-instance control:
+- Database connections
+- Blockchain interface
+- Configuration management
+- Cache management
+
+### Strategy Pattern
+Implements flexible, interchangeable algorithms for:
+- Voting mechanisms
+- Task assignment strategies
+- Notification delivery methods
+- Permission management
+![alt text](image.png)
+### Observer Pattern
+Enables reactive system behavior through:
+- Real-time notification delivery
+- Task status monitoring
+- Vote progress tracking
+- Member activity observation
+- Automatic updates across dependent components
+
+## Data Relationships
+
+### TaskBlock Relationships
+- Contains multiple groups and tasks
+- Associates with multiple member wallets
+- Maintains voting configurations
+- Tracks member permissions
+
+### Group Relationships
+- Belongs to one TaskBlock
+- Contains multiple members
+- Associates with multiple tasks
+- Maintains group-specific settings
+
+### Task Relationships
+- Belongs to one TaskBlock
+- Associates with multiple groups or members
+- Contains multiple votes
+- Generates multiple notifications
+
+### User-Wallet Relationships
+- One user can have multiple wallets
+- Each wallet belongs to one user
+- Wallets can participate in multiple TaskBlocks
+- Wallets maintain voting rights
+
+## System Features
+
+### Task Management
+- Creation and assignment
+- Progress tracking
+- Priority management
+- Deadline monitoring
+- Status updates
+- Task dependencies
 
 ### User Management
-- **Multi-User Support**
-  - Secure user registration and authentication with password encryption
-  - Task block membership management (add/remove members)
-  - Invitation system for onboarding new members (future release)
-  - Role-based access control (admin, editor, viewer roles planned)
+- Secure authentication
+- Role-based access control
+- Group membership
+- Activity tracking
+- Profile management
+
+### Voting Management
+- Strategy configuration
+- Duration setting
+- Threshold management
+- Result processing
+- Vote recording
+
+### Notification Management
+- Event monitoring
+- Message generation
+- Delivery prioritization
+- User preferences
+- Real-time updates
+
+## Future Enhancements
+
+### Planned Features
+- Advanced analytics dashboard
+- Custom workflow creation
+- Integrated chat system
+- Mobile application
+- API expansion
+- Enhanced reporting capabilities
+
+### Technical Improvements
+- Performance optimization
+- Scalability enhancements
+- Additional blockchain integrations
+- Extended API capabilities
+- Enhanced security features
+
 
 ---
-
-## Technical Architecture
-
-### Backend Structure
+## Backend Structure
 `````
 src/
 ├── main/
@@ -54,95 +196,11 @@ src/
 │   │               ├── response/
 │   │               └── service/
 │   │               └── TaskBlock.java
-│   └── resources/
-│       └── application.properties
-
+│   ├──resources/
+│   |    └── application.properties
+|   └──test/
+|        └───...
 `````
-
-### Design Patterns
-
-1. **Singleton Pattern**
-   - Manages blockchain and database connection instances
-   - Ensures that critical system components (e.g., blockchain wallets) have a single instance across the system
-
-2. **Strategy Pattern**
-   - Allows dynamic adjustment of voting strategies (e.g., quorum-based, majority-based)
-   - Configurable at runtime to support custom use cases
-   - Ensures flexibility for different projects and teams
-
-3. **Observer Pattern (Frontend & Backend)**
-   - Backend:
-     - Handles real-time notifications for task changes and voting results
-     - Automatically updates users when a vote is finalized or a task is assigned
-   - Frontend:
-     - WebSocket-based implementation for real-time updates
-     - Dynamically updates the task list, voting status, and notifications without requiring a page refresh
-
-4. **Facade Pattern (Frontend)**
-   - Simplifies state management and WebSocket handling
-   - Centralizes communication between the Vuex store and WebSocket connection
-   - Provides an easy-to-use interface for updating the state and subscribing to WebSocket events
-
----
-
-## Blockchain Integration
-
-- **Custom Blockchain Server**
-  - Built using **Go**
-  - Deployed and hosted with **Docker**
-  - Secure transaction handling and task block verification
-  - Integrated API endpoints for interacting with the blockchain server
-- **Features:**
-  - Task verification and immutable record storage
-  - Wallet association and identity management
-  - Handles voting mechanism securely
-
----
-
-### Data Relationships
-
-- **TaskBlock**
-  - Contains multiple tasks and is associated with multiple wallets
-  - Represents a group or project with its own tasks and members
-
-- **Wallet**
-  - Uniquely identifies users in the blockchain system
-  - Supports multiple wallet associations for each user
-
-- **User**
-  - Can own multiple wallets
-  - Can belong to multiple TaskBlocks
-  - Tracks roles and permissions
-
-### Frontend WebSocket and Store Integration
-- **WebSocket Integration:**
-  - Handles real-time communication for updates like task changes and voting results
-  - Automatically triggers UI updates for users
-- **State Management with Facade Pattern:**
-  - Vuex store acts as the single source of truth
-  - Facade simplifies interactions with the WebSocket, abstracting complex subscription logic
-  - Ensures seamless integration between state changes and UI updates
-
----
-
-## Planned Features
-
-### Notification System
-- **Real-Time Alerts**
-  - Push notifications for task changes, voting progress, and results
-  - Email or SMS alerts for critical updates
-- **Task Assignment Alerts**
-  - Notify users when assigned a new task
-  - Send reminders for upcoming task deadlines
-
-### Enhanced User Management
-- **Advanced Role Management**
-  - Define custom roles with specific permissions
-  - Assign roles dynamically
-- **Activity Tracking**
-  - Log user activities for auditing purposes
-
----
 
 ## Getting Started
 
@@ -157,12 +215,14 @@ src/
 1. Clone the repository:
    ```bash
    git clone https://github.com/your-repo/task-management.git
-2. Build the project ( Go to the backend directory and run this command )
+2.  Set up your mysql credentials **(username , password)** in the application.properties **(resources/application.properties)** . 
+
+3. Build the project ( Go to the backend directory and run this command )
     ```bash
-   mvn clean install 
-3. Install Vue.js frontend dependencies:
+    mvn clean install 
+4. Install Vue.js frontend dependencies:
     ```bash
         cd frontend
         npm install
         npm run serve
-4. Access the application at http://localhost:8080.
+5. Access the application at http://localhost:8080.
