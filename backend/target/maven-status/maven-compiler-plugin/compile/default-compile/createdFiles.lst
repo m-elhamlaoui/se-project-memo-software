@@ -11,7 +11,6 @@ com\example\taskblock\model\strategy\PercentageAcceptanceStrategy.class
 com\example\taskblock\model\notification\NotificationType.class
 com\example\taskblock\repository\NotificationRepository.class
 com\example\taskblock\controller\TaskController.class
-com\example\taskblock\TaskBlock.class
 com\example\taskblock\repository\VoteRepository.class
 com\example\taskblock\response\LoginResponse.class
 com\example\taskblock\config\BlockchainConfig.class
