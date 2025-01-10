@@ -90,7 +90,6 @@ Implements flexible, interchangeable algorithms for:
 - Task assignment strategies
 - Notification delivery methods
 - Permission management
-![alt text](image.png)
 ### Observer Pattern
 Enables reactive system behavior through:
 - Real-time notification delivery
