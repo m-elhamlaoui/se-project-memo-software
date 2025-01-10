@@ -1,9 +1,13 @@
 package com.example.taskblock.service;
 
+import com.example.taskblock.dto.TaskDto;
 import com.example.taskblock.model.task.Task;
+import com.example.taskblock.model.taskblock.TaskBlock;
 import com.example.taskblock.model.taskblock.TaskBlockGroup;
 import com.example.taskblock.model.user.Member;
+import com.example.taskblock.repository.MemberRepository;
 import com.example.taskblock.repository.TaskBlockGroupRepository;
+import com.example.taskblock.repository.TaskBlockRepository;
 import com.example.taskblock.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -19,12 +23,17 @@ public class TaskService {
     private final TaskRepository taskRepository;
     private final NotificationService notificationService;
     private final TaskBlockGroupRepository taskBlockGroupRepository;
+    private final TaskBlockRepository taskBlockRepository;
+    private final MemberRepository memberRepository ;
+
 
     @Autowired
-    public TaskService(TaskRepository taskRepository, NotificationService notificationService,TaskBlockGroupRepository taskBlockGroupRepository) {
+    public TaskService(TaskRepository taskRepository, NotificationService notificationService,TaskBlockGroupRepository taskBlockGroupRepository,TaskBlockRepository taskBlockRepository, MemberRepository memberRepository) {
         this.taskRepository = taskRepository;
         this.notificationService = notificationService;
         this.taskBlockGroupRepository = taskBlockGroupRepository;
+        this.taskBlockRepository = taskBlockRepository;
+        this.memberRepository = memberRepository;
     }
 
     public Task createTask(Task task) {
@@ -129,5 +138,55 @@ public class TaskService {
         taskRepository.save(task);
     }
 
+    public Task createTask(Member creator, Long taskBlockId, TaskDto taskDto) {
+        System.out.println("Starting createTask method");
+        System.out.println("TaskBlockId: " + taskBlockId);
 
+        Optional<TaskBlock> optionalTaskBlock = taskBlockRepository.findById(taskBlockId);
+        System.out.println("TaskBlock found: " + optionalTaskBlock.isPresent());
+
+        TaskBlock taskBlock = optionalTaskBlock
+                .orElseThrow(() -> new IllegalArgumentException("TaskBlock not found"));
+        System.out.println("TaskBlock ID after retrieval: " + taskBlock.getId());
+
+        Task task = new Task(
+                taskDto.getTitle(),
+                taskDto.getDescription(),
+                taskBlock,
+                taskDto.getDurationSeconds()
+        );
+        System.out.println("Task created with title: " + task.getTitle());
+
+        if(!taskDto.getTaggedGroupIds().isEmpty()) {
+            System.out.println("Processing tagged groups");
+            List<TaskBlockGroup> groups = taskBlockGroupRepository
+                    .findByTaskBlockIdAndGroupIds(taskBlockId, taskDto.getTaggedGroupIds());
+            System.out.println("Found " + groups.size() + " groups");
+
+            if(groups.size() != taskDto.getTaggedGroupIds().size()) {
+                throw new IllegalArgumentException("Some groups were not found");
+            }
+            task.setTaggedGroups(groups);
+        }
+
+        if(!taskDto.getTaggedMemberNames().isEmpty()) {
+            System.out.println("Processing tagged members");
+            List<Member> members = memberRepository.findByHandleIn(taskDto.getTaggedMemberNames());
+            System.out.println("Found " + members.size() + " members");
+
+            if(members.size() != taskDto.getTaggedMemberNames().size()) {
+                throw new IllegalArgumentException("Some members were not found");
+            }
+            task.setTaggedIndividuals(members);
+        }
+
+        task.addObserver(notificationService);
+        taskBlock.addTask(task);
+        System.out.println("About to save task");
+
+        Task savedTask = taskRepository.save(task);
+        System.out.println("Task saved with ID: " + (savedTask != null ? savedTask.getId() : "null"));
+
+        return savedTask;
+    }
 }

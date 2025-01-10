@@ -84,6 +84,7 @@ public class TaskBlockGroup {
     }
 
     public void setTaskBlock(TaskBlock taskBlock) {
+
         this.taskBlock = taskBlock;
     }
 // Getters and setters
