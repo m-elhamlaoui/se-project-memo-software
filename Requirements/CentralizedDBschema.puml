@@ -1,0 +1,46 @@
+@startuml
+entity Users {
+    * id : int <<PK>>
+    * username : String
+    * email : String
+    * password_hash : String
+    * created_at : Timestamp
+}
+
+entity TaskBlocks {
+    * id : int <<PK>>
+    * name : String
+    * creator_id : int <<FK>>
+    * created_at : Timestamp
+}
+
+entity Tasks {
+    * id : int <<PK>>
+    * title : String
+    * description : String
+    * status : Enum('pending', 'completed')
+    * taskblock_id : int <<FK>>
+    * creator_id : int <<FK>>
+    * created_at : Timestamp
+}
+
+entity Wallets {
+    * id : int <<PK>>
+    * user_id : int <<FK>>
+    * taskblock_id : int <<FK>>
+    * balance : Decimal(10, 2)
+}
+
+entity Votes {
+    * id : int <<PK>>
+    * task_id : int <<FK>>
+    * voter_id : int <<FK>>
+    * value : Bool
+}
+
+Users ||--o{ TaskBlocks : "creates"
+TaskBlocks ||--o{ Tasks : "contains"
+Users ||--o{ Wallets : "has"
+TaskBlocks ||--o{ Wallets : "linked to"
+Tasks ||--o{ Votes : "has"
+@enduml

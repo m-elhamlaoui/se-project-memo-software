@@ -1,0 +1,53 @@
+@startuml
+
+left to right direction
+skinparam packageStyle rect
+actor UnloggedOrUnregisteredUser
+actor TaskBlockMember
+actor User
+actor BlockchainNetwork
+
+package "Usecase Voting system Project "{
+
+usecase "Login"
+usecase "Register"
+/'TaskBlockMember'/
+usecase "CreateTaskBlock" 
+usecase "InviteMember" 
+usecase "ProposeTask" 
+usecase "VoteTask"
+usecase "VoteMember"
+/'BlockchainNetwork'/
+usecase "GiveCoins"
+usecase "RemoveCoins"
+usecase "RemoveMember"
+usecase "CloseVote"
+usecase "SmartContract_VoteManagement"
+usecase "ViewWallet"
+usecase "CheckWallet"
+
+UnloggedOrUnregisteredUser --> Login
+UnloggedOrUnregisteredUser --> Register
+
+User --> CreateTaskBlock
+TaskBlockMember --> InviteMember
+TaskBlockMember --> ProposeTask
+TaskBlockMember --> VoteTask
+TaskBlockMember --> VoteMember
+TaskBlockMember --> ViewWallet
+TaskBlockMember --|> User
+
+BlockchainNetwork --> GiveCoins
+BlockchainNetwork --> RemoveCoins
+BlockchainNetwork --> CloseVote
+BlockchainNetwork --> SmartContract_VoteManagement
+BlockchainNetwork --> RemoveMember
+BlockchainNetwork --> CheckWallet
+
+RemoveMember .u.> CheckWallet : <<includes>>
+RemoveCoins .u.> RemoveMember : <<extends>>
+
+}
+
+
+@enduml
